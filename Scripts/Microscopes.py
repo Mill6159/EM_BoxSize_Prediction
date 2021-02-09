@@ -6,10 +6,12 @@
 
 class Microscopes:
 
-	def __init__(self,notify=False,
-	             micro='Arctica',d=150,
-	             lowdefocus=1000,
-	             highdefocus=2000):
+	def __init__(self,
+		notify=False,
+		micro='Arctica',
+		d=150,
+		lowdefocus=1000,
+		highdefocus=2000):
 		'''
 		docstring
 
@@ -31,14 +33,8 @@ class Microscopes:
 
 		self.micro = micro
 		self.d = d
-
-		self.notify = notify
-		if self.notify == True: # write to the terminal
-			print('#'*10)
-			print('Microscopes class has been called')
-			print('#'*10)
-		else: # or don't
-			pass
+		self.highdefocus = highdefocus
+		self.lowdefocus = lowdefocus
 
 		self.micro_dict = { # make the dictionary a property of the class.
 		'Arctica': {
@@ -51,10 +47,51 @@ class Microscopes:
 		'lambda': 1.96876*10**-12,
 		'Cs':0.0027}}
 
-		print(self.micro,self.micro_dict[self.micro]['pixel_size']) # example of how to access values within the dictionary
+		self.notify = notify
+		if self.notify == True: # write to the terminal
+			self.help_message()
+		else: # or don't
+			pass
+
+		# print(self.micro,self.micro_dict[self.micro]['pixel_size']) # example of how to access values within the dictionary
 			
+	def boxSize_calculator(self):
+		'''
+		Actually calculates the ideal box size!!
+		'''
 
 
-testClass = Microscopes(notify=True)
+	def help_message(self):
+		'''
+		Generates a help message when a user passes the -h flag in the terminal
+		'''
+		print('#'*50)
+		print('#'*50)
+		print('Microscopes class has been called')
+		print('This class accepts the following arguments:')
+		print('PROVIDE BRIEF DESCRIPTION OF EACH')
+		print('\t-micro: the type of microscope\t')
+		for key in self.micro_dict:
+			print('\t\t\t+',key)
+		print('\t-d: the estimated diameter of the particle in Angstroms')
+		print('\t\t+ Default is 50 angstroms')
+		print('#'*50)
+		print('#'*50)
 
-print(testClass.micro_dict)
+		
+
+# testClass = Microscopes(notify=True)
+
+# print(testClass.micro_dict)
+
+
+
+
+
+
+
+
+
+
+
+
