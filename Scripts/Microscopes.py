@@ -55,6 +55,8 @@ class Microscopes:
 
 		# print(self.micro,self.micro_dict[self.micro]['pixel_size']) # example of how to access values within the dictionary
 			
+
+
 	def boxSize_calculator(self):
 		'''
 		Actually calculates the ideal box size!!
