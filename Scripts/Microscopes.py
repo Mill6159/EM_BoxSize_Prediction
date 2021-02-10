@@ -1,6 +1,11 @@
 # Description
+# This code was built by Robert Miller and Peiwen Shi
+# Was developed for use by the Ando lab etc etc
 
 # Modules
+
+import os
+import numpy as np 
 
 # Classes
 
@@ -21,7 +26,11 @@ class Microscopes:
 		d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
 		lowdefocus: lowest defocus value data was collected at input in units nanometer
 		highdefocus: highest defocus value data was collected at input in units nanometer
-		
+		Cs:
+		lamdba:
+
+
+		workflow explanation:
 		micro_dict: nested dictionary
 		For each microscope a set of parameters are stored.
 		(1) pixel_size:
@@ -54,13 +63,6 @@ class Microscopes:
 			pass
 
 		# print(self.micro,self.micro_dict[self.micro]['pixel_size']) # example of how to access values within the dictionary
-			
-
-
-	def boxSize_calculator(self):
-		'''
-		Actually calculates the ideal box size!!
-		'''
 
 
 	def help_message(self):
@@ -82,7 +84,13 @@ class Microscopes:
 
 		
 
-# testClass = Microscopes(notify=True)
+testClass = Microscopes(notify=True)
+
+print(testClass.micro)
+
+testClass.micro = "Krios"
+
+print(testClass.micro)
 
 # print(testClass.micro_dict)
 
