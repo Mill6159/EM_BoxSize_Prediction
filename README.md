@@ -7,6 +7,11 @@ __(2)__
 
 ## Code workflow  
 
-## Instructions for use  
+## Instructions for use 
+
+The code accepts the following flags:  
+
+* --micro <type of microscrope> (Default: Arctica)  
+* --d <diamerter of particle> (Default: 150 Angstroms)  
 
 ## Instructions for download
