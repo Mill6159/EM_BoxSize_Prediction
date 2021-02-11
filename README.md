@@ -11,7 +11,13 @@ __(2)__
 
 The code accepts the following flags:  
 
-* --micro <type of microscrope> (Default: Arctica)  
-* --d <diamerter of particle> (Default: 150 Angstroms)  
+* --micro 'type of microscrope' (Default: Arctica)  
+* --d 'diameter of particle' (Default: 150 Angstroms)  
+
+__Example__  
+
+```bash
+python BoxSizePrediction.py --micro Arctica --d 55
+```
 
 ## Instructions for download
