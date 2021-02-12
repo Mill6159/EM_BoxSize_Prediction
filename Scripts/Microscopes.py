@@ -89,6 +89,7 @@ class Microscopes:
 		print('#'*50)
 		print('#'*50)
 		print('Microscopes class has been called')
+		print('THIS IS THE HELP MESSAGE')
 		print('This class accepts the following arguments:')
 		print('PROVIDE BRIEF DESCRIPTION OF EACH')
 		print('\t-micro: the type of microscope\t')
@@ -101,13 +102,13 @@ class Microscopes:
 
 		
 
-testClass = Microscopes(notify=True)
+# testClass = Microscopes(notify=True)
 
-print(testClass.micro)
+# print(testClass.micro)
 
-testClass.micro = "Krios"
+# testClass.micro = "Krios"
 
-print(testClass.micro)
+# print(testClass.micro)
 
 # print(testClass.micro_dict)
 

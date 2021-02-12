@@ -141,14 +141,12 @@ class BoxSizeCalcs(Microscopes):
 
 boxTest = BoxSizeCalcs(Microscopes(notify=True))
 
-print('TEST')
-print(boxTest.micro)
+print('TESTS BELOW \n')
+print('Class Microscope Default micro: ',boxTest.micro)
 
-print(boxTest.calc_dF())
+print('Calculating dF: ',boxTest.calc_dF())
 
-print(boxTest.boxesPerGrid())
-
-print(boxTest.nyquist_Calc())
+print('Nyquist values as a function of bin #: ',boxTest.nyquist_Calc())
 
 boxTest.finalBoxSize()
 
@@ -158,14 +156,17 @@ boxTest.finalBoxSize()
 ## Example for how to add flags to command line arguments
 
 # Define the parser
-parser = argparse.ArgumentParser(description='Short sample app')
+parser = argparse.ArgumentParser(description='Short sample app',
+                                 add_help=False)
 
 # Declare an argument (`--algo`), saying that the 
 # corresponding value should be stored in the `algo` 
 # field, and using a default value if the argument 
 # isn't given
 parser.add_argument('--micro', action="store", dest='micro', default='Arctica')
-parser.add_argument('--h', action="store", dest='notify', default='False')
+# parser.add_argument('-h', action="store", dest='notify') 
+# parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+#                     help='boxTest.help_message()')
 
 ## Lets add a --info flag that includes microscope/experiment/etc details
 
@@ -173,20 +174,43 @@ parser.add_argument('--h', action="store", dest='notify', default='False')
 # values in the `args` variable
 args = parser.parse_args()
 
+
 # Individual arguments can be accessed as attributes...
 print ('ALGO OUTPUT: ',args.micro)
-print ('ALGO OUTPUT: ',args.notify)
+# print ('ALGO OUTPUT: ',args.notify)
 
-if args.notify == "True":
-  args.notify = True
+# Parsing notify input
 
-
-boxTest = BoxSizeCalcs(Microscopes(notify=args.notify))
-
-
-
+# if args.notify == None:
+#   args.notify = True
+# else:
+#   args.notify = False
 
 
+# boxTest = BoxSizeCalcs(Microscopes(notify=args.notify))
+
+
+### Fancier argsparse - method for setting -h help message
+
+# class CapitalisedHelpFormatter(argparse.HelpFormatter):
+#      def add_usage(self, usage, actions, groups, prefix=None):
+#          if prefix is None:
+#             prefix = 'Usage: '
+#          return super(CapitalisedHelpFormatter, self).add_usage(
+#              usage, actions, groups, prefix)
+
+# parser = argparse.ArgumentParser(add_help=False, formatter_class=CapitalisedHelpFormatter)
+# parser._positionals.title = 'Positional arguments'
+# parser._optionals.title = 'Optional arguments'
+# parser.add_argument('-v', '--version', action='version',
+#                      version='%(prog)s 1.0', help="Show program's version number and exit.")
+# _VersionAction(option_strings=['-v', '--version'], dest='version', nargs=0, const=None, default='==SUPPRESS==', type=None, choices=None, help="Show program's version number and exit.", metavar=None)
+
+# parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+#                      help='Show this help message and exit.')
+
+
+# args = parser.parse_args()
 
 
 
