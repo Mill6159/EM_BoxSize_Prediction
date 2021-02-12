@@ -44,7 +44,7 @@ class BoxSizeCalcs(Microscopes):
 
 
 		'''
-		dF = self.highdefocus - self.lowdefocus 
+		dF = self.highdefocus - self.lowdefocus # This is wrong. It should just be highdefocus value
 
 		return dF
 
@@ -165,6 +165,9 @@ parser = argparse.ArgumentParser(description='Short sample app')
 # field, and using a default value if the argument 
 # isn't given
 parser.add_argument('--micro', action="store", dest='micro', default='Arctica')
+parser.add_argument('--h', action="store", dest='notify', default='False')
+
+## Lets add a --info flag that includes microscope/experiment/etc details
 
 # Now, parse the command line arguments and store the 
 # values in the `args` variable
@@ -172,7 +175,13 @@ args = parser.parse_args()
 
 # Individual arguments can be accessed as attributes...
 print ('ALGO OUTPUT: ',args.micro)
+print ('ALGO OUTPUT: ',args.notify)
 
+if args.notify == "True":
+  args.notify = True
+
+
+boxTest = BoxSizeCalcs(Microscopes(notify=args.notify))
 
 
 

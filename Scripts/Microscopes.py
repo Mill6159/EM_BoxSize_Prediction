@@ -18,7 +18,7 @@ class Microscopes:
 	def __init__(self,
 		notify=False,
 		micro='Arctica',
-		d=150,
+		d=50,
 		lowdefocus=1000,
 		highdefocus=2000):
 		'''
@@ -26,14 +26,14 @@ class Microscopes:
 
 		Inputs:
 		notify: If true, a message prints into the terminal indicating the class has been initiated.
-			Is the purpose of notify to generate the help message?
-			Is the user going to decide true or false / Do we always want a help message to be generated?
+			Is the purpose of notify to generate the help message? RM: For the user to understand the code inputs
+			Is the user going to decide true or false / Do we always want a help message to be generated? RM: Only if user indicates --h
 		micro: The type of microscope used for data collection. Default: Arctica
 		d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
 		lowdefocus: lowest defocus value data was collected at input in units nanometer
 		highdefocus: highest defocus value data was collected at input in units nanometer
-			Are these values entered by the user every time?
-			(Is the defocus range fixed for a microscope?)
+			Are these values entered by the user every time? RM: They do not have to be but it will then use the defaults
+			(Is the defocus range fixed for a microscope?) RM: No but we will provide defaults for the user if they do not provide this info each time
 		Cs:
 		lamdba:
 
@@ -66,11 +66,11 @@ class Microscopes:
 
 		'''
 		Generally, why are we treating micro, d, lowdefocus, highdefocus differently from pixel_size, lambda and Cs?
-		(Why not include all in the nested dictionary?)
+		(Why not include all in the nested dictionary?) RM: d, low/highdefocus are experiment specific
 
 		The idea I am getting is that the nested dictionary associates certain values for parameters in each microscope
 		(so that the user does not need to enter the default values every time?)
-		Will these values remain constant in different measurements?
+		Will these values remain constant in different measurements? RM: Exactly! and yes, these will be constant for every experiment
 		'''
 
 		self.notify = notify
