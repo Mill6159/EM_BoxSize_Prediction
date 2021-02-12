@@ -10,6 +10,10 @@ import numpy as np
 # Classes
 
 class Microscopes:
+	"""
+	Description
+	Defines objects that contain all microscope information
+	"""
 
 	def __init__(self,
 		notify=False,
@@ -22,10 +26,14 @@ class Microscopes:
 
 		Inputs:
 		notify: If true, a message prints into the terminal indicating the class has been initiated.
+			Is the purpose of notify to generate the help message?
+			Is the user going to decide true or false / Do we always want a help message to be generated?
 		micro: The type of microscope used for data collection. Default: Arctica
 		d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
 		lowdefocus: lowest defocus value data was collected at input in units nanometer
 		highdefocus: highest defocus value data was collected at input in units nanometer
+			Are these values entered by the user every time?
+			(Is the defocus range fixed for a microscope?)
 		Cs:
 		lamdba:
 
@@ -55,6 +63,15 @@ class Microscopes:
 		'pixel_size': 0.505,
 		'lambda': 1.96876*10**-12,
 		'Cs':0.0027}}
+
+		'''
+		Generally, why are we treating micro, d, lowdefocus, highdefocus differently from pixel_size, lambda and Cs?
+		(Why not include all in the nested dictionary?)
+
+		The idea I am getting is that the nested dictionary associates certain values for parameters in each microscope
+		(so that the user does not need to enter the default values every time?)
+		Will these values remain constant in different measurements?
+		'''
 
 		self.notify = notify
 		if self.notify == True: # write to the terminal

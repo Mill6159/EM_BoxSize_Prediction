@@ -38,7 +38,8 @@ class BoxSizeCalcs(Microscopes):
 		From the microscope defocus range, calculate the delta defocus value (dF) in nanometer
 
 		Input/Output:
-
+		highdefocus
+		lowdefocus
 
 
 		'''
@@ -50,6 +51,9 @@ class BoxSizeCalcs(Microscopes):
 		'''
 		Description
 		Calculates Nyquist value in Angstrom as a function of pixel size and bin number
+		Input/Output:
+		bin#
+		pixel_size
 
 		What is the Nyquist?
 		'''
