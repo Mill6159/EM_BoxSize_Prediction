@@ -7,6 +7,17 @@ __(2)__
 
 ## Code workflow  
 
-## Instructions for use  
+## Instructions for use 
+
+The code accepts the following flags:  
+
+* --micro 'type of microscrope' (Default: Arctica)  
+* --d 'diameter of particle' (Default: 150 Angstroms)  
+
+__Example__  
+
+```bash
+python BoxSizePrediction.py --micro Arctica --d 55
+```
 
 ## Instructions for download

@@ -5,6 +5,7 @@
 # Modules
 
 from Microscopes import *
+import argparse # module for passing flags into the command line
 
 # Classes
 
@@ -150,4 +151,33 @@ print(boxTest.boxesPerGrid())
 print(boxTest.nyquist_Calc())
 
 boxTest.finalBoxSize()
+
+
+
+# -----------> <------------ #
+## Example for how to add flags to command line arguments
+
+# Define the parser
+parser = argparse.ArgumentParser(description='Short sample app')
+
+# Declare an argument (`--algo`), saying that the 
+# corresponding value should be stored in the `algo` 
+# field, and using a default value if the argument 
+# isn't given
+parser.add_argument('--micro', action="store", dest='micro', default='Arctica')
+
+# Now, parse the command line arguments and store the 
+# values in the `args` variable
+args = parser.parse_args()
+
+# Individual arguments can be accessed as attributes...
+print ('ALGO OUTPUT: ',args.micro)
+
+
+
+
+
+
+
+
 
