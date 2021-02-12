@@ -57,6 +57,7 @@ class BoxSizeCalcs(Microscopes):
 		pixel_size
 
 		What is the Nyquist?
+    What do the bins mean?
 		'''
 
 
@@ -139,7 +140,7 @@ class BoxSizeCalcs(Microscopes):
 
 
 
-boxTest = BoxSizeCalcs(Microscopes(notify=True))
+boxTest = BoxSizeCalcs(Microscopes(notify=False))
 
 print('TESTS BELOW \n')
 print('Class Microscope Default micro: ',boxTest.micro)
@@ -163,10 +164,9 @@ parser = argparse.ArgumentParser(description='Short sample app',
 # corresponding value should be stored in the `algo` 
 # field, and using a default value if the argument 
 # isn't given
-parser.add_argument('--micro', action="store", dest='micro', default='Arctica')
-# parser.add_argument('-h', action="store", dest='notify') 
-# parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
-#                     help='boxTest.help_message()')
+parser.add_argument('-m','--micro', action="store", dest='micro', default='Arctica')
+parser.add_argument('-d','--diameter', action="store", dest='d', default=50) # Angstrom
+parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
 
 ## Lets add a --info flag that includes microscope/experiment/etc details
 
@@ -174,43 +174,16 @@ parser.add_argument('--micro', action="store", dest='micro', default='Arctica')
 # values in the `args` variable
 args = parser.parse_args()
 
-
 # Individual arguments can be accessed as attributes...
-print ('ALGO OUTPUT: ',args.micro)
-# print ('ALGO OUTPUT: ',args.notify)
+print ('ALGO OUTPUT - MICRO: ',args.micro)
+print ('ALGO OUTPUT - Notify Statement: ',args.notify)
+print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
 
-# Parsing notify input
-
-# if args.notify == None:
-#   args.notify = True
-# else:
-#   args.notify = False
+boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
+                                   micro=args.micro,
+                                   d=args.d))
 
 
-# boxTest = BoxSizeCalcs(Microscopes(notify=args.notify))
-
-
-### Fancier argsparse - method for setting -h help message
-
-# class CapitalisedHelpFormatter(argparse.HelpFormatter):
-#      def add_usage(self, usage, actions, groups, prefix=None):
-#          if prefix is None:
-#             prefix = 'Usage: '
-#          return super(CapitalisedHelpFormatter, self).add_usage(
-#              usage, actions, groups, prefix)
-
-# parser = argparse.ArgumentParser(add_help=False, formatter_class=CapitalisedHelpFormatter)
-# parser._positionals.title = 'Positional arguments'
-# parser._optionals.title = 'Optional arguments'
-# parser.add_argument('-v', '--version', action='version',
-#                      version='%(prog)s 1.0', help="Show program's version number and exit.")
-# _VersionAction(option_strings=['-v', '--version'], dest='version', nargs=0, const=None, default='==SUPPRESS==', type=None, choices=None, help="Show program's version number and exit.", metavar=None)
-
-# parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
-#                      help='Show this help message and exit.')
-
-
-# args = parser.parse_args()
 
 
 
