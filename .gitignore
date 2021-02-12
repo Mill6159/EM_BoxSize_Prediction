@@ -10,4 +10,7 @@
 # python environment
 
 
-# 
+# Excel Files
+
+Excel*
+*.xlsx 
