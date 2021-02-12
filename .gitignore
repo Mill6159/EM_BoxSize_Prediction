@@ -5,7 +5,7 @@
 
 # cache files  
 
-*.DS_Store
+.DS_Store
 
 # python environment
 
