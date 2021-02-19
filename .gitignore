@@ -5,8 +5,14 @@
 
 # cache files  
 
+.DS_Store
+.idea
+__pycache__
 
 # python environment
 
 
-# 
+# Excel Files
+
+Excel*
+*.xlsx 
