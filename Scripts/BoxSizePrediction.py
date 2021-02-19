@@ -32,30 +32,6 @@ class BoxSizeCalcs(Microscopes):
   This class inherits the properties of the Microscopes() class
   '''
 
-  # def __init__(self):
-  #   '''
-
-  #   '''
-
-  #   # RM! Maybe put default diamter and defocus values in this class? It isn't really a function of the microscope. 
-
-  def __init__(self, 
-    d=150, 
-    lowdefocus=1000, 
-    highdefocus=2000):
-    '''
-    Description
-    Defines inputs:
-    d: estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
-    lowdefocus: lowest defocus value data collected at input. Default: 1000 nanometers
-    highdefocus: highest defocus value data collected at input. Default: 2000 nanometers
-
-    '''
-
-    self.d = d
-    self.lowdefocus = lowdefocus
-    self.highdefocus = highdefocus
-
   def nyquist_Calc(self):
     '''
     Description
@@ -76,39 +52,37 @@ class BoxSizeCalcs(Microscopes):
 
     return bin1, bin2, bin3, bin4
 
-  def calcR(self):
-    '''
-    Description
-    Calculates R = lambda * dF * u + Cs * lambda^3 * u^3
+  # def calcR(self):
+  #   '''
+  #   Description
+  #   Calculates R = lambda * dF * u + Cs * lambda^3 * u^3
     
-    Inputs/Outputs:
-    u = [1/m]
-    ubin#:
-    dF:
+  #   Inputs/Outputs:
+  #   u = [1/m]
+  #   ubin#:
+  #   dF:
 
-    '''
+  #   '''
 
-    u_bin1, u_bin2, u_bin3, u_bin4 = self.nyquist_Calc()
-    u_bin1, u_bin2, u_bin3, u_bin4 = u_bin1*10**(-10), u_bin2*10**(-10), u_bin3*10**(-10), u_bin4*10**(-10) # convert to meters
-    # dF = self.calc_dF()
-    # print('dF',dF)
-    dF = self.highdefocus * 10**(9) # how is this dF?!
-    # dF = dF * 10**(-9) # convert to meters
-    Cs = self.micro_dict[self.micro]['Cs']
-    wavelength = self.micro_dict[self.micro]['lambda']
-    # print(wavelength, Cs, dF)
+  #   u_bin1, u_bin2, u_bin3, u_bin4 = self.nyquist_Calc()
+  #   u_bin1, u_bin2, u_bin3, u_bin4 = u_bin1*10**(-10), u_bin2*10**(-10), u_bin3*10**(-10), u_bin4*10**(-10) # convert to meters
+  #   # dF = self.calc_dF()
+  #   # print('dF',dF)
+  #   dF = self.highdefocus * 10**(9) # how is this dF?!
+  #   # dF = dF * 10**(-9) # convert to meters
+  #   Cs = self.micro_dict[self.micro]['Cs']
+  #   wavelength = self.micro_dict[self.micro]['lambda']
+  #   # print(wavelength, Cs, dF)
 
-    u_vals = [u_bin1, u_bin2, u_bin3, u_bin4]
-    c=1
-    r_vals = {}
-    for j in u_vals:
-      r_vals['bin%s'%str(c)] = ((wavelength * dF)/j) + ((Cs * wavelength**3)/j**3)
-      c+=1
-
-
-    return r_vals # R value as a function of bin #  # not really used
+  #   u_vals = [u_bin1, u_bin2, u_bin3, u_bin4]
+  #   c=1
+  #   r_vals = {}
+  #   for j in u_vals:
+  #     r_vals['bin%s'%str(c)] = ((wavelength * dF)/j) + ((Cs * wavelength**3)/j**3)
+  #     c+=1
 
 
+  #   return r_vals # R value as a function of bin #  # not really used
 
 
   def R(self):
@@ -150,6 +124,7 @@ class BoxSizeCalcs(Microscopes):
 
     R = self.R() # returns R value
     boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diamter and R
+    boxSize_A = boxSize * 10**10
     
     list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
     104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
@@ -160,13 +135,25 @@ class BoxSizeCalcs(Microscopes):
     for box in range(len(list_of_boxes)):
       if list_of_boxes[box] >= boxSize:
         new_list = list_of_boxes[box-1:]
-        self.smallBox = new_list[0]
-        self.optimalBox = new_list[1]
-        self.bigBox = new_list[2]
+        # print(new_list)
 
-    self.smallBox = smallBox
-    self.optimalBox = optimalBox
-    self.bigBox = bigBox
+    #     self.smallBox = new_list[0]
+    #     self.optimalBox = new_list[1]
+    #     self.bigBox = new_list[2]
+
+    # self.smallBox = smallBox
+    # self.optimalBox = optimalBox
+    # self.bigBox = bigBox
+
+    print(boxSize_A)
+    c=0
+    for i in list_of_boxes:
+      if i >= boxSize_A:
+        print(i)
+        print(c)
+      c+=1
+
+    print(list_of_boxes[c-1,c,c+1]) # RM! Note this syntax is wrong, you must store the final c value and grab the index before and after
 
     return boxSize
 
@@ -176,19 +163,29 @@ class BoxSizeCalcs(Microscopes):
 
 
 
-  def boxesPerGrid(self):
-    '''
-    Description
-    Given a known box size AND a known size of grid holes on the cyro-EM grids
-    one can predict the total number of particles per grid hole for ideal data collection
-    (i.e. particle density, i.e. protein concentration)
+  # def boxesPerGrid(self):
+  #   '''
+  #   Description
+  #   Given a known box size AND a known size of grid holes on the cyro-EM grids
+  #   one can predict the total number of particles per grid hole for ideal data collection
+  #   (i.e. particle density, i.e. protein concentration)
 
-    Resource: https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
-    '''
+  #   Resource: https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
+  #   '''
 
-    # a,b,c = self.finalBoxSize()
+  #   # a,b,c = self.finalBoxSize()
 
-    # return a,b,c
+  #   # return a,b,c
+
+
+test = BoxSizeCalcs(Microscopes(notify=True))
+testBoxSize = test.finalBoxSize()
+
+
+
+
+
+
 
 
 
@@ -214,28 +211,28 @@ class BoxSizeCalcs(Microscopes):
 #
 
 
-list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
-104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
-260, 288, 300, 320, 352, 360, 384, 416, 440, 448, 480, 512, 540, 560, 576, 588, 
-600, 630, 640, 648, 672, 686, 700, 720, 750, 756, 768, 784, 800, 810, 840, 864, 
-882, 896, 900, 960, 972, 980, 1000, 1008, 1024] # ideal box sizes 
+# list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
+# 104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
+# 260, 288, 300, 320, 352, 360, 384, 416, 440, 448, 480, 512, 540, 560, 576, 588, 
+# 600, 630, 640, 648, 672, 686, 700, 720, 750, 756, 768, 784, 800, 810, 840, 864, 
+# 882, 896, 900, 960, 972, 980, 1000, 1008, 1024] # ideal box sizes 
 
 #https://blake.bcm.edu/emanwiki/EMAN2/BoxSize
 
-boxTest = BoxSizeCalcs(Microscopes(notify=False))
+# boxTest = BoxSizeCalcs(Microscopes(notify=True))
 
-print('TESTS BELOW \n')
-# print('Class Microscope Default micro: ',boxTest.micro)
+# print('TESTS BELOW \n')
+# # print('Class Microscope Default micro: ',boxTest.micro)
 
-# print('Calculating dF: ',boxTest.calc_dF())
+# # print('Calculating dF: ',boxTest.calc_dF())
 
-# print('Nyquist values as a function of bin #: ',boxTest.nyquist_Calc())
+# # print('Nyquist values as a function of bin #: ',boxTest.nyquist_Calc())
 
-print('Final Box Size')
+# print('Final Box Size')
 
-print(boxTest.finalBoxSize()*10**10)
+# print(boxTest.finalBoxSize()*10**10)
 
-print('box size above')
+# print('box size above')
 
 
 
@@ -284,31 +281,31 @@ print('box size above')
 ## Example for how to add flags to command line arguments
 
 # Define the parser
-parser = argparse.ArgumentParser(description='Short sample app',
-                                 add_help=False)
+# parser = argparse.ArgumentParser(description='Short sample app',
+#                                  add_help=False)
 
-# Declare an argument (`--algo`), saying that the 
-# corresponding value should be stored in the `algo` 
-# field, and using a default value if the argument 
-# isn't given
-parser.add_argument('-m','--micro', action="store", dest='micro', default='Arctica')
-parser.add_argument('-d','--diameter', action="store", dest='d', default=50) # Angstrom
-parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
+# # Declare an argument (`--algo`), saying that the 
+# # corresponding value should be stored in the `algo` 
+# # field, and using a default value if the argument 
+# # isn't given
+# parser.add_argument('-m','--micro', action="store", dest='micro', default='Arctica')
+# parser.add_argument('-d','--diameter', action="store", dest='d', default=50) # Angstrom
+# parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
 
-## Lets add a --info flag that includes microscope/experiment/etc details
+# ## Lets add a --info flag that includes microscope/experiment/etc details
 
-# Now, parse the command line arguments and store the 
-# values in the `args` variable
-args = parser.parse_args()
+# # Now, parse the command line arguments and store the 
+# # values in the `args` variable
+# args = parser.parse_args()
 
-# Individual arguments can be accessed as attributes...
-print ('ALGO OUTPUT - MICRO: ',args.micro)
-print ('ALGO OUTPUT - Notify Statement: ',args.notify)
-print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
+# # Individual arguments can be accessed as attributes...
+# print ('ALGO OUTPUT - MICRO: ',args.micro)
+# print ('ALGO OUTPUT - Notify Statement: ',args.notify)
+# print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
 
-boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
-                                   micro=args.micro,
-                                   d=args.d))
+# boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
+#                                    micro=args.micro,
+#                                    d=args.d))
 
 
 
