@@ -17,41 +17,25 @@ class Microscopes:
 
 	def __init__(self,
 		notify=False,
-		micro='Arctica',
-		d=150,
-		lowdefocus=1000,
-		highdefocus=2000):
+		micro='Arctica'):
 		'''
-		docstring
-
-		Inputs:
+		Description
+		Defines inputs given by the microscope:
 		notify: If true, a message prints into the terminal indicating the class has been initiated.
-			Is the purpose of notify to generate the help message?
-			Is the user going to decide true or false / Do we always want a help message to be generated?
 		micro: The type of microscope used for data collection. Default: Arctica
-		d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
-		lowdefocus: lowest defocus value data was collected at input in units nanometer
-		highdefocus: highest defocus value data was collected at input in units nanometer
-			Are these values entered by the user every time?
-			(Is the defocus range fixed for a microscope?)
-		Cs:
-		lamdba:
 
-
-		workflow explanation:
+		Workflow explanation
 		micro_dict: nested dictionary
 		For each microscope a set of parameters are stored.
-		(1) pixel_size:
+		(1) pixel_size: in angstroms
 		(2) lambda: electron beam wavelength in meters
+		(3) Cs: corrector for spherical aberration in meters
 
 		'''
 
 		# As we build, we should set micro to None and allow the user to choose each time?
 
 		self.micro = micro
-		self.d = d
-		self.highdefocus = highdefocus
-		self.lowdefocus = lowdefocus
 
 		self.micro_dict = { # make the dictionary a property of the class.
 		'Arctica': {
@@ -62,16 +46,12 @@ class Microscopes:
 		'Krios': {
 		'pixel_size': 0.505,
 		'lambda': 1.96876*10**-12,
-		'Cs':0.0027}}
+		'Cs':0.0027},
 
-		'''
-		Generally, why are we treating micro, d, lowdefocus, highdefocus differently from pixel_size, lambda and Cs?
-		(Why not include all in the nested dictionary?)
-
-		The idea I am getting is that the nested dictionary associates certain values for parameters in each microscope
-		(so that the user does not need to enter the default values every time?)
-		Will these values remain constant in different measurements?
-		'''
+		'Polara':{
+		'pixel_size':0.505,
+		'lambda':1.96876*10**-12,
+		'Cs':0.00226}}
 
 		self.notify = notify
 		if self.notify == True: # write to the terminal
