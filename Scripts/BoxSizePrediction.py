@@ -39,6 +39,23 @@ class BoxSizeCalcs(Microscopes):
 
   #   # RM! Maybe put default diamter and defocus values in this class? It isn't really a function of the microscope. 
 
+  def __init__(self, 
+    d=150, 
+    lowdefocus=1000, 
+    highdefocus=2000):
+    '''
+    Description
+    Defines inputs:
+    d: estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
+    lowdefocus: lowest defocus value data collected at input. Default: 1000 nanometers
+    highdefocus: highest defocus value data collected at input. Default: 2000 nanometers
+
+    '''
+
+    self.d = d
+    self.lowdefocus = lowdefocus
+    self.highdefocus = highdefocus
+
   def nyquist_Calc(self):
     '''
     Description
@@ -96,18 +113,19 @@ class BoxSizeCalcs(Microscopes):
 
   def R(self):
     '''
-    doc string
-
+    Description
+    Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
 
     '''
 
-    dF = self.highdefocus * (10**(-9))# from nanometers to meters
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
-    u = 1/(3.5 * 10**(-10)) # units meters
-    Cs = self.micro_dict[self.micro]['Cs']
-    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
+    dF = self.highdefocus * (10**(-9)) # from nanometers to meters
+    Cs = self.micro_dict[self.micro]['Cs'] # in units meters
+    u = 1/(3.5 * 10**(-10)) # in units meters
+    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
 
     return R
+
 
   def finalBoxSize(self):
     '''
@@ -132,8 +150,30 @@ class BoxSizeCalcs(Microscopes):
 
     R = self.R() # returns R value
     boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diamter and R
+    
+    list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
+    104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
+    260, 288, 300, 320, 352, 360, 384, 416, 440, 448, 480, 512, 540, 560, 576, 588, 
+    600, 630, 640, 648, 672, 686, 700, 720, 750, 756, 768, 784, 800, 810, 840, 864, 
+    882, 896, 900, 960, 972, 980, 1000, 1008, 1024] # ideal box sizes 
+
+    for box in range(len(list_of_boxes)):
+      if list_of_boxes[box] >= boxSize:
+        new_list = list_of_boxes[box-1:]
+        self.smallBox = new_list[0]
+        self.optimalBox = new_list[1]
+        self.bigBox = new_list[2]
+
+    self.smallBox = smallBox
+    self.optimalBox = optimalBox
+    self.bigBox = bigBox
 
     return boxSize
+
+    print('The optimal box size is', optimalBox)
+    print('The box size below the optimal is', smallBox)
+    print('The box size above the optimal is', bigBox)
+
 
 
   def boxesPerGrid(self):
