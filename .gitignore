@@ -14,6 +14,7 @@ __pycache_/_
 
 # python environment
 
+*.pyc
 
 # Excel Files
 
