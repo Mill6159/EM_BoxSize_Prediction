@@ -9,8 +9,9 @@
 .DS_Store?
 ._*
 .idea
+.idea/
 .cache
-__pycache_/_
+__pycache__/
 
 # python environment
 
