@@ -73,8 +73,8 @@ class Microscopes:
     '''
     Generates a help message when a user passes the -h flag in the terminal
     '''
-    print('#'*50)
-    print('#'*50)
+    print('#'*63)
+    print('#'*63)
     print('Microscopes class has been called')
     print('This class accepts the following arguments:')
     print('PROVIDE BRIEF DESCRIPTION OF EACH')
@@ -83,8 +83,8 @@ class Microscopes:
       print('\t\t\t+',key)
     print('\t-d: the estimated diameter of the particle in Angstroms')
     print('\t\t+ Default is 50 angstroms')
-    print('#'*50)
-    print('#'*50)
+    print('#'*63)
+    print('#'*63)
 
     
 

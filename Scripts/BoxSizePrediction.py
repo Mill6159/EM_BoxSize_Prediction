@@ -5,6 +5,7 @@
 # Modules
 
 from Microscopes import *
+import argparse
 
 # Classes
 
@@ -134,19 +135,47 @@ class BoxSizeCalcs(Microscopes):
 
 
 
-boxTest = BoxSizeCalcs(Microscopes(notify=True))
+# boxTest = BoxSizeCalcs(Microscopes(notify=True))
 
-print('TEST')
-print(boxTest.micro)
+# print('TEST')
+# print(boxTest.micro)
 
-print(boxTest.calc_dF())
+# print(boxTest.calc_dF())
 
-print(boxTest.boxesPerGrid())
+# print(boxTest.boxesPerGrid())
 
-print(boxTest.nyquist_Calc())
+# print(boxTest.nyquist_Calc())
 
-boxTest.finalBoxSize()
+# boxTest.finalBoxSize()
 
-# This is a note on a branch
+
+# Building command line arguments
+
+# -----------> <------------ #
+## Example for how to add flags to command line arguments
+# Define the parser
+parser = argparse.ArgumentParser(description='Short sample app',
+                                 add_help=False)
+# Declare an argument (`--algo`), saying that the 
+# corresponding value should be stored in the `algo` 
+# field, and using a default value if the argument 
+# isn't given
+parser.add_argument('-m','--micro', action="store", dest='micro', default='Arctica')
+parser.add_argument('-d','--diameter', action="store", dest='d', default=50) # Angstrom
+parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
+## Lets add a --info flag that includes microscope/experiment/etc details
+# Now, parse the command line arguments and store the 
+# values in the `args` variable
+args = parser.parse_args()
+# Individual arguments can be accessed as attributes...
+
+# print ('ALGO OUTPUT - MICRO: ',args.micro)
+# print ('ALGO OUTPUT - Notify Statement: ',args.notify)
+# print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
+
+
+boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
+                                   micro=args.micro,
+                                   d=args.d))
 
 
