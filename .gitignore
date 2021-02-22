@@ -6,8 +6,11 @@
 # cache files  
 
 .DS_Store
+.DS_Store?
+._*
 .idea
-__pycache__
+.cache
+__pycache_/_
 
 # python environment
 
