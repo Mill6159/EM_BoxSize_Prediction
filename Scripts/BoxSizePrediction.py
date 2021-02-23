@@ -33,6 +33,9 @@ class BoxSizeCalcs(Microscopes):
   '''
 
 
+  ## RM! Add init function for super/subclass to better accept command line inputs
+  # Fixed with hacky method at the bottom for now
+
   def calc_dF(self):
     '''
     Description
@@ -146,22 +149,26 @@ class BoxSizeCalcs(Microscopes):
     600, 630, 640, 648, 672, 686, 700, 720, 750, 756, 768, 784, 800, 810, 840, 864, 
     882, 896, 900, 960, 972, 980, 1000, 1008, 1024] # ideal box sizes 
 
+    try:
+      index=[]
+      c=0
+      for i in list_of_boxes:
+        if i >= boxSize*10**10: # must get box size into Angstrom
+          index.append(c)
+          break
+        c+=1
 
-    index=[]
-    c=0
-    for i in list_of_boxes:
-      if i >= boxSize*10**10: # must get box size into Angstrom
-        index.append(c)
-        break
-      c+=1
+      self.smallBox = list_of_boxes[c-1]
+      self.optimalBox = list_of_boxes[c]
+      self.bigBox = list_of_boxes[c+1]
 
-    self.smallBox = list_of_boxes[c-1]
-    self.optimalBox = list_of_boxes[c]
-    self.bigBox = list_of_boxes[c+1]
-
-    print('The optimal box size is:', self.optimalBox)
-    print('The box size below the optimal is:', self.smallBox)
-    print('The box size above the optimal is:', self.bigBox)
+      print('The optimal box size is:', self.optimalBox)
+      print('The box size below the optimal is:', self.smallBox)
+      print('The box size above the optimal is:', self.bigBox)
+    except IndexError as error:
+      print('Error arose when attempting to calculate ideal box size')
+      print('Particle size was likely too large... double check inputs')
+      print('Error Message:',error)
 
 
     return boxSize
@@ -208,8 +215,8 @@ parser = argparse.ArgumentParser(description='Short sample app',
 # corresponding value should be stored in the `algo` 
 # field, and using a default value if the argument 
 # isn't given
-parser.add_argument('-m','--micro', action="store", dest='micro', default='Arctica')
-parser.add_argument('-d','--diameter', action="store", dest='d', default=50) # Angstrom
+parser.add_argument('-m ','--micro ', action="store", dest='micro', default='Arctica')
+parser.add_argument('-d ','--diameter ', action="store", dest='d', default=50) # Angstrom
 parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
 ## Lets add a --info flag that includes microscope/experiment/etc details
 # Now, parse the command line arguments and store the 
@@ -218,14 +225,24 @@ args = parser.parse_args()
 # Individual arguments can be accessed as attributes...
 
 # print ('ALGO OUTPUT - MICRO: ',args.micro)
-# print ('ALGO OUTPUT - Notify Statement: ',args.notify)
+# # print ('ALGO OUTPUT - Notify Statement: ',args.notify)
 # print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
+# print(type(args.d))
 
 
 boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
-                                   micro=args.micro,
+                                   micro=str(args.micro),
                                    d=args.d))
 
+
+# RM! Temporary fix to super/subclass issue
+
+# print('Initial micro:', args.micro)
+boxTest.micro = str(args.micro)
+boxTest.d = float(args.d)
+
+# print(boxTest.d)
+# print('actual micro', boxTest.micro)
 
 boxTest.finalBoxSize()
 
