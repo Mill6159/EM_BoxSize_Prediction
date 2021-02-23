@@ -11,7 +11,7 @@ import argparse
 
 # micros = Microscopes(notify=True)
 
-# User inputs
+# User inputs 02.23
 
 # micro_input = input('Type of microscope (default Arctica): ')
 # diameter_input = input('Diameter of particle in Angstrom (default 50): ')
