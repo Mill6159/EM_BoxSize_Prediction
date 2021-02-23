@@ -48,17 +48,20 @@ class Microscopes:
     'Arctica': {
     'pixel_size': 0.505,
     'lambda': 2.50795*10**-12,
-    'Cs':0.0027},
+    'Cs':0.0027,
+    'u':(1/(3.5 * 10**(-10)))},
 
     'Krios': {
     'pixel_size': 0.505,
     'lambda': 1.96876*10**-12,
-    'Cs':0.0027},
+    'Cs':0.0027,
+    'u':(1/(2.0 * 10**(-10)))},
 
     'Polara':{
     'pixel_size':0.505,
     'lambda':1.96876*10**-12,
-    'Cs':0.00226}}
+    'Cs':0.00226,
+    'u':(1/(4.0 * 10**(-10)))}}
 
     self.notify = notify
     if self.notify == True: # write to the terminal
