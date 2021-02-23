@@ -36,6 +36,40 @@ class BoxSizeCalcs(Microscopes):
   ## RM! Add init function for super/subclass to better accept command line inputs
   # Fixed with hacky method at the bottom for now
 
+  # def __init__(self, notify=None,
+  #              d=None,
+  #              micro=None,
+  #              lowdefocus=None,
+  #              highdefocus=None):
+  #   if d is None:
+  #     super(BoxSizeCalcs, self).__init__()
+  #   # elif notify is None:
+  #   #   super(BoxSizeCalcs, self).__init__(d=200,
+  #   #                                      micro='Arctica',
+  #   #                                      lowdefocus=1000,
+  #   #                                      highdefocus=2000)
+  #   # elif micro is None:
+  #   #   super(BoxSizeCalcs, self).__init__(d=200,
+  #   #                                      notify=False,
+  #   #                                      lowdefocus=1000,
+  #   #                                      highdefocus=2000)
+  #   # elif lowdefocus is None:
+  #   #   super(BoxSizeCalcs, self).__init__(d=200,
+  #   #                                      micro='Arctica',
+  #   #                                      notify=False,
+  #   #                                      highdefocus=2000)
+  #   # elif highdefocus is None:
+  #   #   super(BoxSizeCalcs, self).__init__(d=200,
+  #   #                                      micro='Arctica',
+  #   #                                      notify=False,
+  #   #                                      lowdefocus=1000)
+  #   else:
+  #     super(BoxSizeCalcs, self).__init__(Microscopes)
+  #   self.d = d
+  #   self.micro = micro
+  #   self.lowdefocus = lowdefocus
+  #   self.highdefocus = highdefocus
+
   def calc_dF(self):
     '''
     Description
@@ -162,13 +196,17 @@ class BoxSizeCalcs(Microscopes):
       self.optimalBox = list_of_boxes[c]
       self.bigBox = list_of_boxes[c+1]
 
+      print('#'*10,'THE FINAL BOX SIZES','#'*10)
       print('The optimal box size is:', self.optimalBox)
       print('The box size below the optimal is:', self.smallBox)
       print('The box size above the optimal is:', self.bigBox)
+      print('#'*41)
     except IndexError as error:
+      print('*'*65)
       print('Error arose when attempting to calculate ideal box size')
-      print('Particle size was likely too large... double check inputs')
+      print('Particle size was likely too small/large... double check inputs')
       print('Error Message:',error)
+      print('*'*65)
 
 
     return boxSize
@@ -190,20 +228,6 @@ class BoxSizeCalcs(Microscopes):
 
 
 
-# boxTest = BoxSizeCalcs(Microscopes(notify=True))
-
-# print('TEST')
-# print(boxTest.micro)
-
-# print(boxTest.calc_dF())
-
-# print(boxTest.boxesPerGrid())
-
-# print(boxTest.nyquist_Calc())
-
-# boxTest.finalBoxSize()
-
-
 # Building command line arguments
 
 # -----------> <------------ #
@@ -218,6 +242,8 @@ parser = argparse.ArgumentParser(description='Short sample app',
 parser.add_argument('-m ','--micro ', action="store", dest='micro', default='Arctica')
 parser.add_argument('-d ','--diameter ', action="store", dest='d', default=50) # Angstrom
 parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
+parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=1000)
+parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=2000)
 ## Lets add a --info flag that includes microscope/experiment/etc details
 # Now, parse the command line arguments and store the 
 # values in the `args` variable
@@ -230,21 +256,19 @@ args = parser.parse_args()
 # print(type(args.d))
 
 
-boxTest = BoxSizeCalcs(Microscopes(notify=args.notify, # this is how to use the command line inputs to build the class
-                                   micro=str(args.micro),
-                                   d=args.d))
+test = BoxSizeCalcs(d=float(args.d),
+                    notify=args.notify,
+                    micro=str(args.micro),
+                    lowdefocus=float(args.ld),
+                    highdefocus=float(args.hd))
+
+# print(test.d)
+# print(test.micro)
+# print(test.lowdefocus)
+
+test.finalBoxSize()
 
 
-# RM! Temporary fix to super/subclass issue
-
-# print('Initial micro:', args.micro)
-boxTest.micro = str(args.micro)
-boxTest.d = float(args.d)
-
-# print(boxTest.d)
-# print('actual micro', boxTest.micro)
-
-boxTest.finalBoxSize()
 
 
 

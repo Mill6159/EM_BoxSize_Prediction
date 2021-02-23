@@ -66,6 +66,7 @@ class Microscopes:
     self.notify = notify
     if self.notify == True: # write to the terminal
       self.help_message()
+      sys.exit()
     # else: # or don't
     #   pass
 
