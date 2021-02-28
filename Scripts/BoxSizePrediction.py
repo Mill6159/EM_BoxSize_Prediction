@@ -1,6 +1,6 @@
 # Description
 # This is the 'master' script 
-# The script will call all others and generate the user interface and outputs
+# The script will call the Microscopes class and generate the user interface and outputs
 
 # Modules
 
@@ -77,6 +77,8 @@ class BoxSizeCalcs(Microscopes):
 
     Input/Output:
 
+    # Is this function still necessary?
+
 
 
     '''
@@ -88,8 +90,9 @@ class BoxSizeCalcs(Microscopes):
     '''
     Description
     Calculates Nyquist value in Angstrom as a function of pixel size and bin number
-
-    What is the Nyquist?
+    Nyquist frequency: 1/2 of reciprocal of pixel size
+    Nyquist limit: theoretical resolution limit
+    Binninng: reduce image size to speed up computation
     '''
 
 
@@ -134,19 +137,17 @@ class BoxSizeCalcs(Microscopes):
 
   def R(self):
     '''
-    doc string
     Description
     Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
+    Calls parameters in nested dictionary from Microscopes class
+
     '''
 
-    dF = self.highdefocus * (10**(-9))# from nanometers to meters
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
-    u = 1/(3.5 * 10**(-10)) # units meters
-    Cs = self.micro_dict[self.micro]['Cs']
-    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
     dF = self.highdefocus * (10**(-9)) # from nanometers to meters
+    u = self.micro_dict[self.micro]['u'] # in units meters
     Cs = self.micro_dict[self.micro]['Cs'] # in units meters
-    u = 1/(3.5 * 10**(-10)) # in units meters
+
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
 
     return R
@@ -154,8 +155,12 @@ class BoxSizeCalcs(Microscopes):
   def finalBoxSize(self):
     '''
     Description
-    Given all other inputs, this returns the minimum, optimum, and largest suggested box sizes for
+    Given all other inputs, returns the minimum, optimum, and maximum suggested box sizes for
     structure reconstruction
+    Calculates box size from particle diameter and R
+    Compares calculated box size to a list of ideal box sizes
+    Finds optimum box size as the first from list that is greater than calculated value
+    Finds minimum and maximum box sizes as one below and above ideal respectively
     '''
 
     # self.smallBox = 1
@@ -175,7 +180,7 @@ class BoxSizeCalcs(Microscopes):
     # return boxSize
 
     R = self.R() # returns R value
-    boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diamter and R
+    boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diameter and R
 
     list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
     104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
@@ -220,11 +225,18 @@ class BoxSizeCalcs(Microscopes):
     (i.e. particle density, i.e. protein concentration)
 
     Resource: https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
+    https://math.stackexchange.com/questions/3007527/how-many-squares-fit-in-a-circle
     '''
 
     # a,b,c = self.finalBoxSize()
 
     # return a,b,c
+
+    d_circle = (self.optimalBox*10) # arbitrary diameter of circle
+    area_circle = pi * (d_circle/2)**2
+    max_n = area_circle / (self.optimalBox**2)
+
+    self.gridSize = gridSize
 
 
 
