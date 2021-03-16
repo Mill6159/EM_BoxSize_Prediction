@@ -48,17 +48,20 @@ class Microscopes:
     'Arctica': {
     'pixel_size': 0.505,
     'lambda': 2.50795*10**-12,
-    'Cs':0.0027},
+    'Cs':0.0027,
+    'u':(1/(3.5 * 10**(-10)))},
 
     'Krios': {
     'pixel_size': 0.505,
     'lambda': 1.96876*10**-12,
-    'Cs':0.0027},
-
+    'Cs':0.0027,
+    'u':(1/(2.0 * 10**(-10)))},
+    
     'Polara':{
     'pixel_size':0.505,
     'lambda':1.96876*10**-12,
-    'Cs':0.00226}}
+    'Cs':0.00226,
+    'u':(1/(4.0 * 10**(-10)))}}
 
     self.notify = notify
     if self.notify == True: # write to the terminal
@@ -79,11 +82,13 @@ class Microscopes:
     print('Microscopes class has been called')
     print('This class accepts the following arguments:')
     print('PROVIDE BRIEF DESCRIPTION OF EACH')
-    print('\t-micro: the type of microscope\t')
+    print('\t-m , --micro: the type of microscope\t')
     for key in self.micro_dict:
       print('\t\t\t+',key)
-    print('\t-d: the estimated diameter of the particle in Angstroms')
+    print('\t-d , --diameter: the estimated diameter of the particle in Angstroms')
     print('\t\t+ Default is 50 angstroms')
+    print('\t-ld , --lowdefocus: the low defocus value')
+    print('/t-hd , --highdefocus: the high defocus value')
     print('#'*63)
     print('#'*63)
 
