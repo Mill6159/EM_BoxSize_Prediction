@@ -1,17 +1,16 @@
-# This is the 'master' script 
-# The script will call all others and generate the user interface and outputs
+# General description
+# Authors: Rob Miller & Peiwen Shi
+# Report issues to the GitHub issues page or rcm347@cornell.edu
+#
+# Short script was developed to calculate the ideal box size for 
+# particle picking in the processing of cryo-EM data.
+# 
 
 # Modules
-
-# from Microscopes import *
 import argparse
 import os
 import numpy as np 
 import sys
-
-# Classes
-
-# micros = Microscopes(notify=True)
 
 # User inputs
 
@@ -20,14 +19,7 @@ import sys
 # low_defocus_input = input('Low defocus value in nanometer (default 1000): ')
 # high_defocus_input = input('High defocus value in nanometer (default 2000): ')
 
-# Also need to build the code such that if 
-# python BoxSizePrediction.py -h 
-# is issued in the terminal it shifts notify = True
-
-# Calculations
-
 # this should generate an output log file (maybe build that into Microscopes.py)
-
 
 # Microscope Class
 
@@ -91,10 +83,6 @@ class Microscopes:
     if self.notify == True: # write to the terminal
       self.help_message()
       sys.exit()
-    # else: # or don't
-    #   pass
-
-    # print(self.micro,self.micro_dict[self.micro]['pixel_size']) # example of how to access values within the dictionary
 
 
   def help_message(self):
