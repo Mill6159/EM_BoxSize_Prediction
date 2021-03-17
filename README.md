@@ -1,24 +1,31 @@
 # Predicting the ideal box size for EM structure determination  
-* References:  
+* References:   
 __(1)__  
-__(2)__  
+__(2)__  two undescores = bolded
 
-## Summarized derivation  
+_(3)_ one underscore = italics
 
-## Code workflow  
+## Summarized derivation (low priority)   
 
-## Instructions for use 
+## Code workflow  (high priority)  
+
+## Instructions for use (high priority)
 
 The code accepts the following flags:  
 
 * --micro 'type of microscrope' (Default: Arctica)  
 * --d 'diameter of particle' (Default: 150 Angstroms)  
 
+to run the code do x,y, and sometimes z
+
+
+
 __Example__  
 
 ```bash
 python BoxSizePrediction.py --micro Arctica --d 55
 ```
+
 
 ## Instructions for download
 
@@ -50,11 +57,11 @@ BoxSize_exe.py -h ;
 
 ```
 
-## Log File
+## Log File (low priority - fun challenge or Rob will show you how)
 
 **PS - Add this feature**
 
-* Insert an image for the project
+* Insert an image for the project (low priority but looks fancy)
 
 ```bash
 ![title](Images/example.png)
