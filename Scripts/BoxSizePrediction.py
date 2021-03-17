@@ -233,10 +233,14 @@ class BoxSizeCalcs(Microscopes):
     # return a,b,c
 
     d_circle = (self.optimalBox*10) # arbitrary diameter of circle
-    area_circle = pi * (d_circle/2)**2
-    max_n = area_circle / (self.optimalBox**2)
+    r_circle = d_circle/2 # radius of circle
+    c_circle = pi*d_circle # circumference of circlee
+    a_circle = pi*(r_circle)**2 # area of circle
 
-    self.gridSize = gridSize
+    l_box = self.optimalBox # length of box edge
+    a_box = l_box **2 # area of box
+
+    boxes_per_grid = a_circle/a_box - sqrt(1/2)*(c_circle / l_box)
 
 
 
