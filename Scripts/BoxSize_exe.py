@@ -1,30 +1,115 @@
-# This is the 'master' script 
-# The script will call the Microscopes class and generate the user interface and outputs
+#!/usr/local/bin/python3
+
+# General description
+# Authors: Rob Miller & Peiwen Shi
+# Report issues to the GitHub issues page or rcm347@cornell.edu
+#
+# Short script was developed to calculate the ideal box size for 
+# particle picking in the processing of cryo-EM data.
+# 
 
 # Modules
-
-from Microscopes import *
 import argparse
-import numpy as np
+import os
+import numpy as np 
+import sys
 
-# Classes
-
-# micros = Microscopes(notify=True)
-
-# User inputs 02.23
+# User inputs
 
 # micro_input = input('Type of microscope (default Arctica): ')
 # diameter_input = input('Diameter of particle in Angstrom (default 50): ')
 # low_defocus_input = input('Low defocus value in nanometer (default 1000): ')
 # high_defocus_input = input('High defocus value in nanometer (default 2000): ')
 
-# Also need to build the code such that if 
-# python BoxSizePrediction.py -h 
-# is issued in the terminal it shifts notify = True
-
-# Calculations
-
 # this should generate an output log file (maybe build that into Microscopes.py)
+
+# Microscope Class
+
+
+class Microscopes:
+  """
+  Description
+  Defines objects that contain all microscope information
+  """
+
+  def __init__(self,
+    notify=False,
+    micro='Arctica',
+    d=200,
+    lowdefocus=1000,
+    highdefocus=2000,
+    u=None):
+    '''
+    Description
+    Defines inputs given by the microscope:
+    notify: If true, a message prints into the terminal indicating the class has been initiated.
+    micro: The type of microscope used for data collection. Default: Arctica
+
+    Workflow explanation
+    micro_dict: nested dictionary
+    For each microscope a set of parameters are stored.
+    (1) pixel_size: in angstroms
+    (2) lambda: electron beam wavelength in meters
+    (3) Cs: corrector for spherical aberration in meters
+
+    '''
+
+    # As we build, we should set micro to None and allow the user to choose each time?
+
+    self.micro = micro
+    self.lowdefocus = lowdefocus
+    self.highdefocus = highdefocus
+    self.d = d
+    self.u = u
+
+    self.micro_dict = { # make the dictionary a property of the class.
+    'Arctica': {
+    'pixel_size': 0.505,
+    'lambda': 2.50795*10**-12,
+    'Cs':0.0027,
+    'u':(1/(3.5 * 10**(-10)))},
+
+    'Krios': {
+    'pixel_size': 0.505,
+    'lambda': 1.96876*10**-12,
+    'Cs':0.0027,
+    'u':(1/(2.0 * 10**(-10)))},
+    
+    'Polara':{
+    'pixel_size':0.505,
+    'lambda':1.96876*10**-12,
+    'Cs':0.00226,
+    'u':(1/(4.0 * 10**(-10)))}}
+
+    self.notify = notify
+    if self.notify == True: # write to the terminal
+      self.help_message()
+      sys.exit()
+
+
+  def help_message(self):
+    '''
+    Generates a help message when a user passes the -h flag in the terminal
+    '''
+    print('#'*90)
+    print('#'*90)
+    print('#'*32,'EM Box Size Calculations','#'*32)
+    print('Inputs, Defaults, and Descriptions:')
+    print('\t-m , --micro: the type of microscope\t')
+    for key in self.micro_dict:
+      print('\t\t\t+',key)
+    print('\t-d , --diameter: the estimated diameter of the particle in Angstroms')
+    print('\t\t+ Default is 50 angstroms')
+    print('\t-ld , --lowdefocus: the low defocus value')
+    print('\t-hd , --highdefocus: the high defocus value')
+    print('\t-hr , --highresolution: the highest anticipated resolution in Angstrom')
+    print('\t\tDefault for each microscope currently:')
+    for key in self.micro_dict:
+      print('\t\t\t+',key)
+      print('\t\t\t\t+',1/(self.micro_dict[str(key)]['u']*10**(-10)))
+
+    print('#'*90)
+    print('#'*90)
 
 class BoxSizeCalcs(Microscopes):
   '''
@@ -33,51 +118,12 @@ class BoxSizeCalcs(Microscopes):
   '''
 
 
-  ## RM! Add init function for super/subclass to better accept command line inputs
-  # Fixed with hacky method at the bottom for now
-
-  # def __init__(self, notify=None,
-  #              d=None,
-  #              micro=None,
-  #              lowdefocus=None,
-  #              highdefocus=None):
-  #   if d is None:
-  #     super(BoxSizeCalcs, self).__init__()
-  #   # elif notify is None:
-  #   #   super(BoxSizeCalcs, self).__init__(d=200,
-  #   #                                      micro='Arctica',
-  #   #                                      lowdefocus=1000,
-  #   #                                      highdefocus=2000)
-  #   # elif micro is None:
-  #   #   super(BoxSizeCalcs, self).__init__(d=200,
-  #   #                                      notify=False,
-  #   #                                      lowdefocus=1000,
-  #   #                                      highdefocus=2000)
-  #   # elif lowdefocus is None:
-  #   #   super(BoxSizeCalcs, self).__init__(d=200,
-  #   #                                      micro='Arctica',
-  #   #                                      notify=False,
-  #   #                                      highdefocus=2000)
-  #   # elif highdefocus is None:
-  #   #   super(BoxSizeCalcs, self).__init__(d=200,
-  #   #                                      micro='Arctica',
-  #   #                                      notify=False,
-  #   #                                      lowdefocus=1000)
-  #   else:
-  #     super(BoxSizeCalcs, self).__init__(Microscopes)
-  #   self.d = d
-  #   self.micro = micro
-  #   self.lowdefocus = lowdefocus
-  #   self.highdefocus = highdefocus
-
   def calc_dF(self):
     '''
     Description
     From the microscope defocus range, calculate the delta defocus value (dF) in nanometer
 
     Input/Output:
-
-    # Is this function still necessary?
 
 
 
@@ -90,9 +136,8 @@ class BoxSizeCalcs(Microscopes):
     '''
     Description
     Calculates Nyquist value in Angstrom as a function of pixel size and bin number
-    Nyquist frequency: 1/2 of reciprocal of pixel size
-    Nyquist limit: theoretical resolution limit
-    Binninng: reduce image size to speed up computation
+
+    What is the Nyquist?
     '''
 
 
@@ -137,21 +182,24 @@ class BoxSizeCalcs(Microscopes):
 
   def R(self):
     '''
+    doc string
     Description
     Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
-    Calls parameters in nested dictionary from Microscopes class
-
     '''
 
-    wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
-    dF = self.highdefocus * (10**(-9)) # from nanometers to meters
-    u = self.micro_dict[self.micro]['u'] # in units meters
-    Cs = self.micro_dict[self.micro]['Cs'] # in units meters
-<<<<<<< HEAD
-    u = 1/(3.5 * 10**(-10)) # in units meters - RM!!
-=======
+    if self.u == None:
+      self.u = self.micro_dict[self.micro]['u']
+    else:
+      self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
 
->>>>>>> aaa90d74a4c94f05e7b9133c70e82d175dd0d67c
+    dF = self.highdefocus * (10**(-9))# from nanometers to meters
+    wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
+    u = self.u # units meters
+    Cs = self.micro_dict[self.micro]['Cs']
+    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
+    dF = self.highdefocus * (10**(-9)) # from nanometers to meters
+    Cs = self.micro_dict[self.micro]['Cs'] # in units meters
+    u = 1/(3.5 * 10**(-10)) # in units meters - RM!!
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
 
     return R
@@ -159,12 +207,8 @@ class BoxSizeCalcs(Microscopes):
   def finalBoxSize(self):
     '''
     Description
-    Given all other inputs, returns the minimum, optimum, and maximum suggested box sizes for
+    Given all other inputs, this returns the minimum, optimum, and largest suggested box sizes for
     structure reconstruction
-    Calculates box size from particle diameter and R
-    Compares calculated box size to a list of ideal box sizes
-    Finds optimum box size as the first from list that is greater than calculated value
-    Finds minimum and maximum box sizes as one below and above ideal respectively
     '''
 
     # self.smallBox = 1
@@ -184,7 +228,7 @@ class BoxSizeCalcs(Microscopes):
     # return boxSize
 
     R = self.R() # returns R value
-    boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diameter and R
+    boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diamter and R
 
     list_of_boxes = [16, 24, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 84, 96, 100, 
     104, 112, 120, 128, 132, 140, 168, 180, 192, 196, 208, 216, 220, 224, 240, 256, 
@@ -205,11 +249,20 @@ class BoxSizeCalcs(Microscopes):
       self.optimalBox = list_of_boxes[c]
       self.bigBox = list_of_boxes[c+1]
 
-      print('#'*10,'THE FINAL BOX SIZES','#'*10)
+      print('#'*15,'Input Parameters','#'*15)
+      print('Particle Diameter (Angstrom):',self.d)
+      print('Microscope:',self.micro)
+      print('Maximum defocus value (nm):', self.highdefocus)
+      print('Maximum anticipated resolution (Angstrom):','%.2f'%(1/self.u*10**10))
+      print('#'*48)
+      print('')
+
+      print('#'*13,'THE FINAL BOX SIZES','#'*14)
       print('The optimal box size is:', self.optimalBox)
       print('The box size below the optimal is:', self.smallBox)
       print('The box size above the optimal is:', self.bigBox)
-      print('#'*41)
+      print('#'*48)
+      print('')
     except IndexError as error:
       print('*'*65)
       print('Error arose when attempting to calculate ideal box size')
@@ -229,9 +282,9 @@ class BoxSizeCalcs(Microscopes):
     (i.e. particle density, i.e. protein concentration)
 
     Resource: https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
-    https://math.stackexchange.com/questions/3007527/how-many-squares-fit-in-a-circle
     '''
 
+    print('#'*10,'Boxes Per Grid Calculation','#'*10)
     print('Assumes a circle that is 10X the box size')
 
     d_circle = (self.optimalBox*10) # arbitrary diameter of circle
@@ -244,17 +297,8 @@ class BoxSizeCalcs(Microscopes):
 
     ## Add in round down to nearest whole integer
 
-    print('Possible number of boxes per grid:', boxes_per_grid)
-
-    d_circle = (self.optimalBox*10) # arbitrary diameter of circle
-    r_circle = d_circle/2 # radius of circle
-    c_circle = pi*d_circle # circumference of circlee
-    a_circle = pi*(r_circle)**2 # area of circle
-
-    l_box = self.optimalBox # length of box edge
-    a_box = l_box **2 # area of box
-
-    boxes_per_grid = a_circle/a_box - sqrt(1/2)*(c_circle / l_box)
+    print('Possible number of boxes per grid:', np.floor(boxes_per_grid))
+    print('#'*48)
 
 
 
@@ -269,39 +313,34 @@ parser = argparse.ArgumentParser(description='Short sample app',
 # corresponding value should be stored in the `algo` 
 # field, and using a default value if the argument 
 # isn't given
+
 parser.add_argument('-m ','--micro ', action="store", dest='micro', default='Arctica')
 parser.add_argument('-d ','--diameter ', action="store", dest='d', default=50) # Angstrom
 parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
 parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=1000)
 parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=2000)
+parser.add_argument('-hr','--highresolution', action="store", dest='hr',default=None) # in meters
+
 ## Lets add a --info flag that includes microscope/experiment/etc details
 # Now, parse the command line arguments and store the 
 # values in the `args` variable
 args = parser.parse_args()
+
 # Individual arguments can be accessed as attributes...
 
-# print ('ALGO OUTPUT - MICRO: ',args.micro)
-# # print ('ALGO OUTPUT - Notify Statement: ',args.notify)
-# print ('ALGO OUTPUT - Diameter INPUT: ',args.d)
-# print(type(args.d))
+# -----> Run script
 
-
-test = BoxSizeCalcs(d=float(args.d),
+calcs = BoxSizeCalcs(d=float(args.d),
                     notify=args.notify,
                     micro=str(args.micro),
                     lowdefocus=float(args.ld),
-                    highdefocus=float(args.hd))
+                    highdefocus=float(args.hd),
+                    u=args.hr)
 
-# print(test.d)
-# print(test.micro)
-# print(test.lowdefocus)
 
-test.finalBoxSize()
-test.boxesPerGrid()
+calcs.finalBoxSize()
+calcs.boxesPerGrid()
 
 
 
-
-
-
-
+    
