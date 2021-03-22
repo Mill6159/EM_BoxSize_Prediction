@@ -11,21 +11,53 @@ _(3)_ one underscore = italics
 
 ## Instructions for use (high priority)
 
-The code accepts the following flags:  
+The code can be executed in terminal. To run the code, use the command 
+```
+python BoxSizeCalculations.py
+```
+which will give a box size calculation based on default parameters.
+
+To modify parameter values depending on the type of microscope used and size of particles imaged, input customized parameters at the end of the command. The code accepts the following flags:  
 
 * --micro 'type of microscrope' (Default: Arctica)  
 * --d 'diameter of particle' (Default: 150 Angstroms)  
 
-to run the code do x,y, and sometimes z
 
+__Example__
 
-
-__Example__  
+For the microscope Arctica and particle diameter of 55 Angstroms, enter the command
 
 ```bash
-python BoxSizePrediction.py --micro Arctica --d 55
+python BoxSizeCalculations.py --micro Arctica --d 55
 ```
 
+Based on input parameters, the code will return an output displaying parameters used, calculated box sizes, and a boxes per grid calculation that predicts the total number of particles in a grid of a given size.
+
+__Example__
+```
+############### Input Parameters ###############
+Particle Diameter (Angstrom): 55.0
+Microscope: Arctica
+Maximum defocus value (nm): 2000.0
+Maximum anticipated resolution (Angstrom): 3.50
+################################################
+
+############# THE FINAL BOX SIZES ##############
+The optimal box size is: 384
+The box size below the optimal is: 360
+The box size above the optimal is: 416
+################################################
+
+########## Boxes Per Grid Calculation ##########
+Assumes a circle that is 10X the box size
+Possible number of boxes per grid: 56.0
+################################################
+```
+
+To trouble shoot, access the help message with the following commmand:
+```
+python EM_BoxCalculations.py -h
+```
 
 ## Instructions for download
 
