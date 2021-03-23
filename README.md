@@ -114,6 +114,4 @@ BoxSize_exe.py -h ;
 
 * Insert an image for the project (low priority but looks fancy)
 
-```bash
-![title](Images/example.png)
-```
+![test](Images/BoxPerGrid.pdf)
