@@ -71,9 +71,17 @@ Two options:
 
 (1) Clone entire GitHub repository:  
 
-SHOW  
+* Must have git installed locally  
+
+```bash
+git clone https://github.com/Mill6159/EM_BoxSize_Prediction.git
+```
+
+Periodically run the command _git pull_ to update the code from the repository.  
 
 (2) Just install an executable (a bit easier)  
+
+* This process will only work for MacOS systems.  
 
 ```bash
 
@@ -89,7 +97,7 @@ cp BoxSize_exe.py /usr/local/bin ;
 chmod u+x /usr/local/bin/BoxSize_exe.py ;
 
 echo "Testing if install worked . . ." ;
-echo "If the install works, it should return the help message!" ;
+echo "If the install works, it should return the help message" ;
 
 BoxSize_exe.py -h ;
 
