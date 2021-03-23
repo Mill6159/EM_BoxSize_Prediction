@@ -4,9 +4,9 @@ __(1)__  Rosenthal, Peter B., and Richard Henderson. ‘Optimal determination of
 __(2)__  https://www.jiscmail.ac.uk/cgi-bin/webadmin?A2=ccpem;e433702b.1412  
 __(3)__  https://math.stackexchange.com/questions/3007527/how-many-squares-fit-in-a-circle
 
-## Summarized derivation  
+## Summarized derivation (low priority)   
 
-## Code workflow    
+## Code workflow  (high priority)  
 
 This code was built using object-oriented programming in python. Objects are created under two classes: class ```Microscopes``` and class ```BoxSizeCalcs```. The Microscopes class defines objects that contain all information about the microscope. The ```__init__``` constructor defines parameters for the microscope: the type of microscope used, estimated diameter of particles imaged in the microscope, and the lowest and highest defocus values for data collection. The values for these parameters are provided by default for the microscope Arctica and a particle diameter of 15 angstroms, but can be inputted by the user depending on the type of microscope used and other experimental conditions. The ```__init__``` constructor also stores a set of parameters for each microscope: the pixel size, wavelength of the electron beam, spherical aberration constant, and the resolution achieved. Default values for these parameters are stored within a nested dictionary. Finally, the Microscopes class contains a help message to assist with parameter inputs by the user.  
 
@@ -15,7 +15,7 @@ The function ```finalBoxSize``` calculates a box size from R and particle diamet
 
 An additional function of the BoxSizeCalcs class is ```boxesPerGrid```. Given the known optimal box size and a known size of cryo-EM grids, this function predicts the possible number of particles for one grid that can be used to determine particle density and protein concentration for ideal data collection.  
 
-## Instructions for use 
+## Instructions for use (high priority)
 
 The code can be executed in terminal. To run the code, use the command  
 ```
@@ -27,6 +27,9 @@ To modify parameter values depending on the type of microscope used and size of 
 
 * --micro 'type of microscrope' (Default: Arctica)  
 * --d 'diameter of particle' (Default: 150 Angstroms)  
+* --lowdefocus 'low defocus value' (Default: 1000 nanometers)  
+* --highdefocus 'high defocus value' (Default: 2000 nanometers)  
+* --highresolution 'highest anticipated resolution' (Default: Arctica: 3.5 Angstroms; Krios: 2.0 Angstroms; Polara: 4.0 Angstroms)  
 
 
 __Example__  
@@ -103,17 +106,12 @@ BoxSize_exe.py -h ;
 
 ```
 
-
-
-
-
-
-
-
-
 ## Log File (low priority - fun challenge or Rob will show you how)
 
+**PS - Add this feature**
 
 * Insert an image for the project (low priority but looks fancy)
 
-![Optional Text](Images/BoxesPerGrid.pdf)
+```bash
+![title](Images/example.png)
+```
