@@ -7,6 +7,7 @@
 .DS_Store
 .DS_Store?
 ._*
+.*
 .idea
 .idea/
 .cache
@@ -18,5 +19,11 @@ __pycache__/
 
 # Excel Files
 
-*/Excel/*.xlsx
+Excel
+Excel/
+Excel/*
+/Excel
+/Excel/
+/Excel/*
+Excel/*.xlsx
 *.xlsx 
