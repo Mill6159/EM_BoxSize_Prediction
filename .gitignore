@@ -18,12 +18,4 @@ __pycache__/
 *.pyc
 
 # Excel Files
-
-Excel
-Excel/
-Excel/*
-/Excel
-/Excel/
-/Excel/*
-Excel/*.xlsx
-*.xlsx 
+.xlsx 
