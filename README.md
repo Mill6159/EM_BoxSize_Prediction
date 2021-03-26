@@ -25,11 +25,17 @@ which will give a box size calculation based on default parameters.
 
 To modify parameter values depending on the type of microscope used and size of particles imaged, input customized parameters at the end of the command. The code accepts the following flags:  
 
-* --micro 'type of microscrope' (Default: Arctica)  
-* --d 'diameter of particle' (Default: 150 Angstroms)  
-* --lowdefocus 'low defocus value' (Default: 1000 nanometers)  
-* --highdefocus 'high defocus value' (Default: 2000 nanometers)  
-* --highresolution 'highest anticipated resolution' (Default: Arctica: 3.5 Angstroms; Krios: 2.0 Angstroms; Polara: 4.0 Angstroms)  
+* -h, --help: 'help message' 
+* -m, --micro: 'type of microscrope' 
+  * (Default: Arctica)  
+* -d, --diameter: 'diameter of particle' 
+  * (Default: 150 Angstroms)  
+* -ld, --lowdefocus: 'low defocus value' 
+  * (Default: 1000 nanometers)  
+* -hd, --highdefocus: 'high defocus value' 
+  * (Default: 2000 nanometers)  
+* -hr, --highresolution: 'highest anticipated resolution' 
+  * (Defaults: Arctica: 3.5 Angstroms; Krios: 2.0 Angstroms; Polara: 4.0 Angstroms)  
 
 
 __Example__  
@@ -106,12 +112,11 @@ BoxSize_exe.py -h ;
 
 ```
 
-## Log File (low priority - fun challenge or Rob will show you how)
 
-**PS - Add this feature**
 
-* Insert an image for the project (low priority but looks fancy)
 
-```bash
-![title](Images/example.png)
-```
+
+
+
+
+
