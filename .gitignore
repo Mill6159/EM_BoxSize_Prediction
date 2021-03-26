@@ -18,5 +18,5 @@ __pycache__/
 
 # Excel Files
 
-/Excel/*
+*/Excel/*.xlsx
 *.xlsx 
