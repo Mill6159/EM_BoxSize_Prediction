@@ -31,7 +31,7 @@ To modify parameter values depending on the type of microscope used and size of 
 * -m, --micro: 'type of microscrope' 
   * (Default: Arctica)  
 * -d, --diameter: 'diameter of particle' 
-  * (Default: 150 Angstroms)  
+  * (Default: 50 Angstroms)  
 * -ld, --lowdefocus: 'low defocus value' 
   * (Default: 1000 nanometers)  
 * -hd, --highdefocus: 'high defocus value' 
