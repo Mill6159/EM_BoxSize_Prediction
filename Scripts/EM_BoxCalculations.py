@@ -4,8 +4,17 @@
 #
 # Short script was developed to calculate the ideal box size for 
 # particle picking in the processing of cryo-EM data.
-# 
-
+# Calculations may be performed for various experimental conditions and
+# types of microscopes.
+# Users can input parameter values or select those provided by default.
+# Parameters for ideal box size calculation include diameter of particle 
+# imaged, lowest and highest defocus, pixel size, electron beam wavelength, 
+# spherical aberration constant, and resolution achieved.
+# Default values are provided for microscopes Arctica, Krios, and Polara.
+# Based on user's inputs or default selections, an optimal box size will be 
+# generated along with two box sizes above and below the optimal.
+# Using the optimal box size
+ 
 # Modules
 import argparse
 import os
@@ -18,8 +27,6 @@ import sys
 # diameter_input = input('Diameter of particle in Angstrom (default 50): ')
 # low_defocus_input = input('Low defocus value in nanometer (default 1000): ')
 # high_defocus_input = input('High defocus value in nanometer (default 2000): ')
-
-# this should generate an output log file (maybe build that into Microscopes.py)
 
 # Microscope Class
 
@@ -42,17 +49,19 @@ class Microscopes:
     Defines inputs given by the microscope:
     notify: If true, a message prints into the terminal indicating the class has been initiated.
     micro: The type of microscope used for data collection. Default: Arctica
+    d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
+    lowdefocus: lowest defocus value for data collected at input in units nanometer
+    highdefocus: highest defocus value for data collected at input in units nanometer
 
     Workflow explanation
-    micro_dict: nested dictionary
+    micro_dict: nested dictionary containing default values
     For each microscope a set of parameters are stored.
-    (1) pixel_size: in angstroms
-    (2) lambda: electron beam wavelength in meters
-    (3) Cs: corrector for spherical aberration in meters
+    (1) pixel_size: size of pixel in angstrom
+    (2) lambda: electron beam wavelength in meter
+    (3) Cs: spherical aberration constant in meter
+    (4) u: resolution achieved in meter
 
     '''
-
-    # As we build, we should set micro to None and allow the user to choose each time?
 
     self.micro = micro
     self.lowdefocus = lowdefocus
@@ -60,7 +69,7 @@ class Microscopes:
     self.d = d
     self.u = u
 
-    self.micro_dict = { # make the dictionary a property of the class.
+    self.micro_dict = {
     'Arctica': {
     'pixel_size': 0.505,
     'lambda': 2.50795*10**-12,
@@ -80,7 +89,7 @@ class Microscopes:
     'u':(1/(4.0 * 10**(-10)))}}
 
     self.notify = notify
-    if self.notify == True: # write to the terminal
+    if self.notify == True:
       self.help_message()
       sys.exit()
 
@@ -121,11 +130,14 @@ class BoxSizeCalcs(Microscopes):
     Description
     From the microscope defocus range, calculate the delta defocus value (dF) in nanometer
 
-    Input/Output:
+    Inputs:
+    lowdefocus: lowest defocus value for data collected at input in units nanometer
+    highdefocus: highest defocus value for data collected at input in units nanometer
 
-
+    This function is not used in the current version of box size calculation
 
     '''
+
     dF = self.highdefocus - self.lowdefocus 
 
     return dF
@@ -135,11 +147,17 @@ class BoxSizeCalcs(Microscopes):
     Description
     Calculates Nyquist value in Angstrom as a function of pixel size and bin number
 
-    What is the Nyquist?
+    Inputs:
+    bin#: bin number
+    pixel_size: size of pixel in angstrom
+
+
+    This function is not used in the current version of box size calculation
+
     '''
 
 
-    bin1 = 2 * self.micro_dict[self.micro]['pixel_size'] # nyquist in Angstrom
+    bin1 = 2 * self.micro_dict[self.micro]['pixel_size']
     bin2 = 4 * self.micro_dict[self.micro]['pixel_size']
     bin3 = 8 * self.micro_dict[self.micro]['pixel_size']
     bin4 = 16 * self.micro_dict[self.micro]['pixel_size']
@@ -151,10 +169,10 @@ class BoxSizeCalcs(Microscopes):
     Description
     Calculates R = lambda * dF * u + Cs * lambda^3 * u^3
     
-    Inputs/Outputs:
-    u = [1/m]
-    ubin#:
-    dF:
+    Inputs:
+    u: resolution achieved in 1/m
+    ubin#: bin number
+    dF: defocus given by the highest defocus value in nanometer
 
     '''
 
@@ -197,7 +215,6 @@ class BoxSizeCalcs(Microscopes):
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
     dF = self.highdefocus * (10**(-9)) # from nanometers to meters
     Cs = self.micro_dict[self.micro]['Cs'] # in units meters
-    u = 1/(3.5 * 10**(-10)) # in units meters - RM!!
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
 
     return R
@@ -205,7 +222,7 @@ class BoxSizeCalcs(Microscopes):
   def finalBoxSize(self):
     '''
     Description
-    Given all other inputs, this returns the minimum, optimum, and largest suggested box sizes for
+    Given all other inputs, returns the minimum, optimum, and largest suggested box sizes for
     structure reconstruction
     '''
 
@@ -238,7 +255,7 @@ class BoxSizeCalcs(Microscopes):
       index=[]
       c=0
       for i in list_of_boxes:
-        if i >= boxSize*10**10: # must get box size into Angstrom
+        if i >= boxSize*10**10:
           index.append(c)
           break
         c+=1
@@ -278,8 +295,7 @@ class BoxSizeCalcs(Microscopes):
     Given a known box size AND a known size of grid holes on the cyro-EM grids
     one can predict the total number of particles per grid hole for ideal data collection
     (i.e. particle density, i.e. protein concentration)
-
-    Resource: https://math.stackexchange.com/questions/466198/algorithm-to-get-the-maximum-size-of-n-squares-that-fit-into-a-rectangle-with-a
+    
     '''
 
     print('#'*10,'Boxes Per Grid Calculation','#'*10)
