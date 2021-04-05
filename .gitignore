@@ -1,13 +1,13 @@
 # image files  
 *.png
 *.jpeg
-*.pdf
 
 # cache files  
 
 .DS_Store
 .DS_Store?
 ._*
+.*
 .idea
 .idea/
 .cache
@@ -18,6 +18,4 @@ __pycache__/
 *.pyc
 
 # Excel Files
-
-Excel*
-*.xlsx 
+.xlsx 
