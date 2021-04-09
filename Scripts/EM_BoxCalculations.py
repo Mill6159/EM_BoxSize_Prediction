@@ -41,8 +41,8 @@ class Microscopes:
     notify=False,
     micro='Arctica',
     d=200,
-    lowdefocus=1000,
-    highdefocus=2000,
+    lowdefocus=10000,
+    highdefocus=20000,
     u=None):
     '''
     Description
@@ -50,8 +50,8 @@ class Microscopes:
     notify: If true, a message prints into the terminal indicating the class has been initiated.
     micro: The type of microscope used for data collection. Default: Arctica
     d: Estimated diameter of the molecule imaged in the microscope. Default: 150 Angstroms
-    lowdefocus: lowest defocus value for data collected at input in units nanometer
-    highdefocus: highest defocus value for data collected at input in units nanometer
+    lowdefocus: lowest defocus value for data collected at input in units angstrom
+    highdefocus: highest defocus value for data collected at input in units angstrom
 
     Workflow explanation
     micro_dict: nested dictionary containing default values
@@ -68,22 +68,20 @@ class Microscopes:
     self.highdefocus = highdefocus
     self.d = d
     self.u = u
+    self.pixel = pixel
 
     self.micro_dict = {
     'Arctica': {
-    'pixel_size': 0.505,
     'lambda': 2.50795*10**-12,
     'Cs':0.0027,
     'u':(1/(3.5 * 10**(-10)))},
 
     'Krios': {
-    'pixel_size': 0.505,
     'lambda': 1.96876*10**-12,
     'Cs':0.0027,
     'u':(1/(2.0 * 10**(-10)))},
     
     'Polara':{
-    'pixel_size':0.505,
     'lambda':1.96876*10**-12,
     'Cs':0.00226,
     'u':(1/(4.0 * 10**(-10)))}}
@@ -128,11 +126,11 @@ class BoxSizeCalcs(Microscopes):
   def calc_dF(self):
     '''
     Description
-    From the microscope defocus range, calculate the delta defocus value (dF) in nanometer
+    From the microscope defocus range, calculate the delta defocus value (dF) in angstrom
 
     Inputs:
-    lowdefocus: lowest defocus value for data collected at input in units nanometer
-    highdefocus: highest defocus value for data collected at input in units nanometer
+    lowdefocus: lowest defocus value for data collected at input in units angstrom
+    highdefocus: highest defocus value for data collected at input in units angstrom
 
     This function is not used in the current version of box size calculation
 
@@ -172,7 +170,7 @@ class BoxSizeCalcs(Microscopes):
     Inputs:
     u: resolution achieved in 1/m
     ubin#: bin number
-    dF: defocus given by the highest defocus value in nanometer
+    dF: defocus given by the highest defocus value in angstrom
 
     '''
 
@@ -180,8 +178,8 @@ class BoxSizeCalcs(Microscopes):
     u_bin1, u_bin2, u_bin3, u_bin4 = u_bin1*10**(-10), u_bin2*10**(-10), u_bin3*10**(-10), u_bin4*10**(-10) # convert to meters
     # dF = self.calc_dF()
     # print('dF',dF)
-    dF = self.highdefocus * 10**(-9) # how is this dF?!
-    # dF = dF * 10**(-9) # convert to meters
+    dF = self.highdefocus * 10**(-10)
+    # dF = dF * 10**(-10) # convert to meters
     Cs = self.micro_dict[self.micro]['Cs']
     wavelength = self.micro_dict[self.micro]['lambda']
     # print(wavelength, Cs, dF)
@@ -208,14 +206,14 @@ class BoxSizeCalcs(Microscopes):
     else:
       self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
 
-    dF = self.highdefocus * (10**(-9))# from nanometers to meters
+    dF = self.highdefocus * (10**(-10))# from angstroms to meters
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
     print('TEST: ', self.u)
     u = self.u # units meters
     print('TEST2: ', u)
     Cs = self.micro_dict[self.micro]['Cs']
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
-    dF = self.highdefocus * (10**(-9)) # from nanometers to meters
+    dF = self.highdefocus * (10**(-10)) # from angstroms to meters
     Cs = self.micro_dict[self.micro]['Cs'] # in units meters
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
 
@@ -340,9 +338,10 @@ parser = argparse.ArgumentParser(description='Short sample app',
 parser.add_argument('-m ','--micro ', action="store", dest='micro', default='Arctica')
 parser.add_argument('-d ','--diameter ', action="store", dest='d', default=50) # Angstrom
 parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
-parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=1000)
-parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=2000)
+parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=10000)
+parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=20000)
 parser.add_argument('-hr','--highresolution', action="store", dest='hr',default=None) # in meters
+parser.add_argument('-p', '--pixelsize', action="store", dest='p',default=0.505) # in Angstroms
 
 ## Lets add a --info flag that includes microscope/experiment/etc details
 # Now, parse the command line arguments and store the 
