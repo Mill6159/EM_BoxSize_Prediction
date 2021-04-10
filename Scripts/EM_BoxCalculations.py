@@ -43,7 +43,8 @@ class Microscopes:
     d=200,
     lowdefocus=10000,
     highdefocus=20000,
-    u=None):
+    u=None,
+    pixel=0.505):
     '''
     Description
     Defines inputs given by the microscope:
@@ -273,7 +274,7 @@ class BoxSizeCalcs(Microscopes):
       print('#'*15,'Input Parameters','#'*15)
       print('Particle Diameter (Angstrom):',self.d)
       print('Microscope:',self.micro)
-      print('Maximum defocus value (nm):', self.highdefocus)
+      print('Maximum defocus value (Angstrom):', self.highdefocus)
       print('Maximum anticipated resolution (Angstrom):','%.2f'%(1/self.u*10**10))
       print('#'*48)
       print('')
@@ -338,10 +339,10 @@ parser = argparse.ArgumentParser(description='Short sample app',
 parser.add_argument('-m ','--micro ', action="store", dest='micro', default='Arctica')
 parser.add_argument('-d ','--diameter ', action="store", dest='d', default=50) # Angstrom
 parser.add_argument('-h','--help', action="store_true", dest='notify') # store_true sets the value to True if the flag is present, and false if not.
-parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=10000)
-parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=20000)
-parser.add_argument('-hr','--highresolution', action="store", dest='hr',default=None) # in meters
-parser.add_argument('-p', '--pixelsize', action="store", dest='p',default=0.505) # in Angstroms
+parser.add_argument('-ld','--lowdefocus', action="store", dest='ld',default=10000) # Angstrom
+parser.add_argument('-hd','--highdefocus', action="store", dest='hd',default=20000) # Angstrom
+parser.add_argument('-hr','--highresolution', action="store", dest='hr',default=None) # meter
+parser.add_argument('-p', '--pixelsize', action="store", dest='p',default=0.505) # Angstrom
 
 ## Lets add a --info flag that includes microscope/experiment/etc details
 # Now, parse the command line arguments and store the 
@@ -357,7 +358,8 @@ calcs = BoxSizeCalcs(d=float(args.d),
                     micro=str(args.micro),
                     lowdefocus=float(args.ld),
                     highdefocus=float(args.hd),
-                    u=args.hr)
+                    u=args.hr,
+                    pixel=args.p)
 
 
 calcs.finalBoxSize()
