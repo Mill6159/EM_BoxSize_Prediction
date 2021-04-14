@@ -106,10 +106,10 @@ class Microscopes:
       print('\t\t\t+',key)
     print('\t-d , --diameter: the estimated diameter of the particle in Angstroms')
     print('\t\t+ Default is 50 angstroms')
-    print('\t-ld , --lowdefocus: the low defocus value')
-    print('\t-hd , --highdefocus: the high defocus value')
+    print('\t-ld , --lowdefocus: the low defocus value in Angstroms')
+    print('\t-hd , --highdefocus: the high defocus value in Angstroms')
     print('\t-hr , --highresolution: the highest anticipated resolution in Angstrom')
-    print('\t-p , --pixelsize: the pixel size')
+    print('\t-p  , --pixelsize: the pixel size in Angstroms')
     print('\t\tDefault for each microscope currently:')
     for key in self.micro_dict:
       print('\t\t\t+',key)
@@ -207,9 +207,7 @@ class BoxSizeCalcs(Microscopes):
 
     dF = self.highdefocus * (10**(-10))# from angstroms to meters
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
-    print('TEST: ', self.u)
     u = self.u # units meters
-    print('TEST2: ', u)
     Cs = self.micro_dict[self.micro]['Cs']
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
     dF = self.highdefocus * (10**(-10)) # from angstroms to meters
