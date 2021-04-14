@@ -109,6 +109,7 @@ class Microscopes:
     print('\t-ld , --lowdefocus: the low defocus value')
     print('\t-hd , --highdefocus: the high defocus value')
     print('\t-hr , --highresolution: the highest anticipated resolution in Angstrom')
+    print('\t-p , --pixelsize: the pixel size')
     print('\t\tDefault for each microscope currently:')
     for key in self.micro_dict:
       print('\t\t\t+',key)
@@ -177,13 +178,10 @@ class BoxSizeCalcs(Microscopes):
 
     u_bin1, u_bin2, u_bin3, u_bin4 = self.nyquist_Calc()
     u_bin1, u_bin2, u_bin3, u_bin4 = u_bin1*10**(-10), u_bin2*10**(-10), u_bin3*10**(-10), u_bin4*10**(-10) # convert to meters
-    # dF = self.calc_dF()
-    # print('dF',dF)
-    dF = self.highdefocus * 10**(-10)
-    # dF = dF * 10**(-10) # convert to meters
+
+    dF = self.highdefocus * 10**(-10) # convert to meters
     Cs = self.micro_dict[self.micro]['Cs']
     wavelength = self.micro_dict[self.micro]['lambda']
-    # print(wavelength, Cs, dF)
 
     u_vals = [u_bin1, u_bin2, u_bin3, u_bin4]
     c=1
