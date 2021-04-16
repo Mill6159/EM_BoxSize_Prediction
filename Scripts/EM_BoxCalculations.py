@@ -20,6 +20,7 @@ import argparse
 import os
 import numpy as np 
 import sys
+# import logging # https://stackoverflow.com/questions/49580313/create-a-log-file
 
 # User inputs
 
@@ -124,6 +125,56 @@ class BoxSizeCalcs(Microscopes):
   This class inherits the properties of the Microscopes() class
   '''
 
+  def nPlot_variX_and_Color(self,pairList,labelList,colorList,savelabel,xlabel='No Label Provided',ylabel='No Label Provided',
+              LogLin=True,LinLin=False,LogLog=False,linewidth=3,
+              set_ylim=False,ylow=0.0001,yhigh=1,darkmode=False):
+        '''
+        :param pairList: list of lists (tuple), must be [[x1,y1],...[xn,yn]]
+        :param labelList: list of length n, labeling the sets of tuples in pairList
+        :param savelabel:
+        :param xlabel:
+        :param ylabel:
+        :param linewidth:
+        :return:
+        '''
+
+        if darkmode==True:
+            plt.style.use('dark_background')
+            c1='#EFECE8'
+        else:
+            mpl.rcParams.update(mpl.rcParamsDefault)
+            c1='k'
+
+        fig=plt.figure(figsize=(10,8)) # set figure dimensions
+        ax1=fig.add_subplot(1,1,1) # allows us to build more complex plots
+        for tick in ax1.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(20) # scale for publication needs
+            tick.label1.set_fontname('Helvetica')
+        for tick in ax1.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(20) # scale for publication needs
+            tick.label1.set_fontname('Helvetica')
+
+        cycol = cycle(['-','*','o'])    
+
+        for i,j,z in zip(pairList,colorList,labelList):
+            plt.plot(i[0],i[1],
+                        label=z,
+                        linewidth=linewidth,
+                        color=j,
+                        linestyle=next(cycol))
+
+        plt.ylabel(ylabel,size=22)
+        plt.xlabel(xlabel,size=22)
+        plt.legend(numpoints=1,fontsize=18,loc='best')
+
+        if set_ylim==True:
+            ax1.set_ylim(ylow,yhigh)
+        # else:
+            # print('Using default y-limit range for the plot: %s'%savelabel)
+        fig.tight_layout()
+
+        plt.savefig(savelabel+'.png',format='png',bbox_inches='tight',dpi=300)
+        plt.show()
 
   def calc_dF(self):
     '''
@@ -223,22 +274,6 @@ class BoxSizeCalcs(Microscopes):
     structure reconstruction
     '''
 
-    # self.smallBox = 1
-    # self.optimalBox = 2
-    # self.bigBox = 3
-
-    # r_vals = self.calcR()
-
-    # c=1
-    # boxSize ={}
-    # for key,value in r_vals.items():
-    #   boxSize['bin%s'%str(c)] = self.d * 10**(-12) + 2 * value
-    #   c+=1
-
-    # print(boxSize) # not correct values...
-
-    # return boxSize
-
     R = self.R() # returns R value
     boxSize = (self.d * 10**(-10)) + 2*(R) # calculates box size from particle diamter and R
 
@@ -281,6 +316,24 @@ class BoxSizeCalcs(Microscopes):
       print('The box size above the optimal is:', self.bigBox)
       print('#'*48)
       print('')
+
+      # generating a list or dictionary that contains the box size
+      # for defocus values from high to low defocus in increments of like 10%
+
+
+      # GOALS FOR NOW
+
+      # Create list for boxsizes as function of dF
+
+      # 10 steps from high df to low dF
+
+      # dfValues = [list of 10 values]
+      # boxSizes = [list of 10 boxes]
+
+      # When we meet again
+
+      # plotList = [dfValues,boxSizes]
+
     except IndexError as error:
       print('*'*65)
       print('Error arose when attempting to calculate ideal box size')
@@ -291,6 +344,10 @@ class BoxSizeCalcs(Microscopes):
 
 
     return boxSize
+
+
+  
+
 
 
   def boxesPerGrid(self):
