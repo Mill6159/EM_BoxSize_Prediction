@@ -320,6 +320,14 @@ class BoxSizeCalcs(Microscopes):
       # generating a list or dictionary that contains the box size
       # for defocus values from high to low defocus in increments of like 10%
 
+      dF = self.highdefocus * (10**(-10))
+      step = 0.1
+      dfValues = [(1-i)*dF for i in np.arange(0, 1, step)]
+
+      RValues = [self.R()]
+
+      boxSizes = [self.d * 10**(-10) + 2*RValues[i] for i in range(10)]
+
 
       # GOALS FOR NOW
 
