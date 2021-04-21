@@ -20,6 +20,7 @@ import argparse
 import os
 import numpy as np 
 import sys
+from matplotlib import pyplot as plt 
 # import logging # https://stackoverflow.com/questions/49580313/create-a-log-file
 
 # User inputs
@@ -244,7 +245,7 @@ class BoxSizeCalcs(Microscopes):
 
     return r_vals # R value as a function of bin # 
 
-  def R(self):
+  def R(self,dF=0.00):
     '''
     doc string
     Description
@@ -256,16 +257,45 @@ class BoxSizeCalcs(Microscopes):
     else:
       self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
 
-    dF = self.highdefocus * (10**(-10))# from angstroms to meters
+    # RM!
+    if dF == 0.00:
+      dF = self.highdefocus * (10**(-10))# from angstroms to meters
+    else:
+      print('ELSED IT!')
+      dF = dF
+
+    # print('dF',dF)
+
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
     u = self.u # units meters
     Cs = self.micro_dict[self.micro]['Cs']
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
-    dF = self.highdefocus * (10**(-10)) # from angstroms to meters
-    Cs = self.micro_dict[self.micro]['Cs'] # in units meters
-    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3)) # in units meters
+    # print('R',R)
 
     return R
+
+  def R2(self,dF):
+    '''
+    doc string
+    Description
+    Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
+    '''
+
+    if self.u == None:
+      self.u = self.micro_dict[self.micro]['u']
+    else:
+      self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
+
+    # print('dF',dF)
+
+    wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
+    u = self.u # units meters
+    Cs = self.micro_dict[self.micro]['Cs']
+    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
+    # print('R',R)
+
+    return R
+
 
   def finalBoxSize(self):
     '''
@@ -324,10 +354,37 @@ class BoxSizeCalcs(Microscopes):
       step = 0.1
       dfValues = [(1-i)*dF for i in np.arange(0, 1, step)]
 
-      RValues = [self.R()]
+      plt.plot(dfValues)
+      plt.show()
 
-      boxSizes = [self.d * 10**(-10) + 2*RValues[i] for i in range(10)]
+      # RM!
 
+      # RValues = [self.R()]
+      RValues = []
+      for i in dfValues:
+        # print('i',type(i))
+        x=self.R2(dF=i)
+        RValues.append(x)
+
+      # print('RVals',RValues)
+
+      # boxSizes = [self.d * 10**(-10) + 2*RValues[i] for i in range(10)]
+
+      # RM!
+
+      plt.plot(RValues)
+      plt.show()
+
+      boxSizes = []
+      for j in RValues:
+        print(j)
+        boxSizes.append((self.d * 10**(-10)) + 2*j)
+
+      print(boxSizes)
+
+      for k in boxSizes:
+        x=k*10**10
+        print('x',x)
 
       # GOALS FOR NOW
 
