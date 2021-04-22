@@ -281,15 +281,21 @@ class BoxSizeCalcs(Microscopes):
     Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
     '''
 
+    # print('1',self.u)
+
     if self.u == None:
       self.u = self.micro_dict[self.micro]['u']
+      # print('ifD it')
     else:
       self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
 
+
+    # print('2',self.u)
     # print('dF',dF)
 
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
     u = self.u # units meters
+    print('u value',u)
     Cs = self.micro_dict[self.micro]['Cs']
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
     # print('R',R)
@@ -347,57 +353,6 @@ class BoxSizeCalcs(Microscopes):
       print('#'*48)
       print('')
 
-      # generating a list or dictionary that contains the box size
-      # for defocus values from high to low defocus in increments of like 10%
-
-      dF = self.highdefocus * (10**(-10))
-      step = 0.1
-      dfValues = [(1-i)*dF for i in np.arange(0, 1, step)]
-
-      plt.plot(dfValues)
-      plt.show()
-
-      # RM!
-
-      # RValues = [self.R()]
-      RValues = []
-      for i in dfValues:
-        # print('i',type(i))
-        x=self.R2(dF=i)
-        RValues.append(x)
-
-      # print('RVals',RValues)
-
-      # boxSizes = [self.d * 10**(-10) + 2*RValues[i] for i in range(10)]
-
-      # RM!
-
-      plt.plot(RValues)
-      plt.show()
-
-      boxSizes = []
-      for j in RValues:
-        print(j)
-        boxSizes.append((self.d * 10**(-10)) + 2*j)
-
-      print(boxSizes)
-
-      for k in boxSizes:
-        x=k*10**10
-        print('x',x)
-
-      # GOALS FOR NOW
-
-      # Create list for boxsizes as function of dF
-
-      # 10 steps from high df to low dF
-
-      # dfValues = [list of 10 values]
-      # boxSizes = [list of 10 boxes]
-
-      # When we meet again
-
-      # plotList = [dfValues,boxSizes]
 
     except IndexError as error:
       print('*'*65)
@@ -407,7 +362,47 @@ class BoxSizeCalcs(Microscopes):
       print('*'*65)
       sys.exit()
 
+    try:
+      dF = self.highdefocus * (10**(-10))
+      step = 0.1
+      dfValues = [(1-i)*dF for i in np.arange(0, 1, step)]
 
+      def intR(dF):
+        '''
+        should not have had to redeclare this function..
+        '''
+        wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
+        u = self.u # units meters
+        Cs = self.micro_dict[self.micro]['Cs']
+        R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
+
+        return R
+
+      rVals = []
+      for j in dfValues:
+        rVals.append(intR(dF=j))
+
+      boxSizes = []
+      for j in rVals:
+        boxSizes.append((self.d * 10**(-10)) + 2*j)
+
+
+      y=[]
+      for j in dfValues:
+        y.append(j * 10**10)
+
+      x=[]
+      for z in boxSizes:
+        x.append(z * 10**10)
+
+      # plt.plot(list_of_boxes)
+      plt.plot(x,y)
+      plt.show()
+
+
+    except Exception as e:
+        print(e)
+     
     return boxSize
 
 
@@ -471,6 +466,8 @@ args = parser.parse_args()
 
 # -----> Run script
 
+print(args.hr)
+
 calcs = BoxSizeCalcs(d=float(args.d),
                     notify=args.notify,
                     micro=str(args.micro),
@@ -481,7 +478,7 @@ calcs = BoxSizeCalcs(d=float(args.d),
 
 
 calcs.finalBoxSize()
-calcs.boxesPerGrid()
+# calcs.boxesPerGrid()
 
 
 
