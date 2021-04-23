@@ -261,41 +261,12 @@ class BoxSizeCalcs(Microscopes):
     if dF == 0.00:
       dF = self.highdefocus * (10**(-10))# from angstroms to meters
     else:
-      print('ELSED IT!')
       dF = dF
 
     # print('dF',dF)
 
     wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
     u = self.u # units meters
-    Cs = self.micro_dict[self.micro]['Cs']
-    R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
-    # print('R',R)
-
-    return R
-
-  def R2(self,dF):
-    '''
-    doc string
-    Description
-    Calculates R = lambda * dF * u + Cs * lambda^3 * u^3 in meters
-    '''
-
-    # print('1',self.u)
-
-    if self.u == None:
-      self.u = self.micro_dict[self.micro]['u']
-      # print('ifD it')
-    else:
-      self.u = 1/(float(self.u)*10**(-10)) # converting user input from Angstrom to 1/meters
-
-
-    # print('2',self.u)
-    # print('dF',dF)
-
-    wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
-    u = self.u # units meters
-    print('u value',u)
     Cs = self.micro_dict[self.micro]['Cs']
     R = (wavelength * dF * u) + (Cs*(wavelength**3)*(u**3))
     # print('R',R)
@@ -370,6 +341,8 @@ class BoxSizeCalcs(Microscopes):
       def intR(dF):
         '''
         should not have had to redeclare this function..
+        Peiwen, we should be able to use self.R() BUT it created issues for me
+        so I just recreated the function here as a quick hack. 
         '''
         wavelength = self.micro_dict[self.micro]['lambda'] # in units meters
         u = self.u # units meters
@@ -380,7 +353,10 @@ class BoxSizeCalcs(Microscopes):
 
       rVals = []
       for j in dfValues:
-        rVals.append(intR(dF=j))
+        rVals.append(intR(dF=j))# here we SHOULD be able to use self.R() rather than intR()
+        # but RM was struggling with a weird bug. Worth looking into.
+
+      # print(rVals)
 
       boxSizes = []
       for j in rVals:
@@ -389,7 +365,7 @@ class BoxSizeCalcs(Microscopes):
 
       y=[]
       for j in dfValues:
-        y.append(j * 10**10)
+        y.append(j * 10**10) # converting dFvalue/Boxsizes to Angstroms
 
       x=[]
       for z in boxSizes:
@@ -403,7 +379,8 @@ class BoxSizeCalcs(Microscopes):
     except Exception as e:
         print(e)
      
-    return boxSize
+    return boxSize # These box sizes DO NOT correspond to "IDEAL" box sizes from our list_of_boxes above
+    # we need to either convert these values or show graphically with a plot or table or something
 
 
   
